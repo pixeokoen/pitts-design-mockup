@@ -104,6 +104,162 @@
         .news-carousel-image:hover {
             transform: scale(1.05);
         }
+        
+        /* Celebration Effect Styles */
+        .celebration-container {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1000;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        
+        .celebration-particle {
+            position: absolute;
+            pointer-events: none;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            will-change: transform, opacity;
+        }
+        
+        .celebration-particle.primary {
+            background-color: #4E8ABD;
+        }
+        
+        .celebration-particle.light {
+            background-color: #7BA7D1;
+        }
+        
+        .celebration-particle.dark {
+            background-color: #273661;
+        }
+        
+        .celebration-particle.diamond {
+            border-radius: 0;
+            transform: rotate(45deg);
+            width: 5px;
+            height: 5px;
+        }
+        
+        .celebration-particle.small {
+            width: 4px;
+            height: 4px;
+        }
+        
+        .celebration-particle.large {
+            width: 8px;
+            height: 8px;
+        }
+        
+        @keyframes celebrationLeft1 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(-12px, -25px) scale(1.2); }
+            25% { opacity: 0.9; transform: translate(-22px, -18px) scale(1); }
+            50% { opacity: 0.7; transform: translate(-32px, 8px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(-38px, 35px) scale(0.6); }
+            100% { opacity: 0; transform: translate(-42px, 50px) scale(0.2); }
+        }
+        
+        @keyframes celebrationLeft2 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(-18px, -15px) scale(1.2); }
+            25% { opacity: 0.9; transform: translate(-28px, -8px) scale(1); }
+            50% { opacity: 0.7; transform: translate(-35px, 12px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(-40px, 28px) scale(0.6); }
+            100% { opacity: 0; transform: translate(-45px, 42px) scale(0.2); }
+        }
+        
+        @keyframes celebrationLeft3 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(-15px, -30px) scale(1.2); }
+            25% { opacity: 0.9; transform: translate(-25px, -22px) scale(1); }
+            50% { opacity: 0.7; transform: translate(-30px, 2px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(-35px, 30px) scale(0.6); }
+            100% { opacity: 0; transform: translate(-40px, 48px) scale(0.2); }
+        }
+        
+        @keyframes celebrationLeft4 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(-25px, -20px) scale(1.3); }
+            25% { opacity: 0.9; transform: translate(-45px, -12px) scale(1); }
+            50% { opacity: 0.7; transform: translate(-60px, 15px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(-70px, 40px) scale(0.6); }
+            100% { opacity: 0; transform: translate(-75px, 55px) scale(0.2); }
+        }
+        
+        @keyframes celebrationLeft5 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(-8px, -35px) scale(1.1); }
+            25% { opacity: 0.9; transform: translate(-15px, -28px) scale(1); }
+            50% { opacity: 0.7; transform: translate(-25px, -5px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(-30px, 20px) scale(0.6); }
+            100% { opacity: 0; transform: translate(-35px, 45px) scale(0.2); }
+        }
+        
+        @keyframes celebrationLeft6 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(-30px, -10px) scale(1.4); }
+            25% { opacity: 0.9; transform: translate(-50px, -5px) scale(1); }
+            50% { opacity: 0.7; transform: translate(-65px, 20px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(-75px, 45px) scale(0.6); }
+            100% { opacity: 0; transform: translate(-80px, 60px) scale(0.2); }
+        }
+        
+        @keyframes celebrationRight1 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(12px, -25px) scale(1.2); }
+            25% { opacity: 0.9; transform: translate(22px, -18px) scale(1); }
+            50% { opacity: 0.7; transform: translate(32px, 8px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(38px, 35px) scale(0.6); }
+            100% { opacity: 0; transform: translate(42px, 50px) scale(0.2); }
+        }
+        
+        @keyframes celebrationRight2 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(18px, -15px) scale(1.2); }
+            25% { opacity: 0.9; transform: translate(28px, -8px) scale(1); }
+            50% { opacity: 0.7; transform: translate(35px, 12px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(40px, 28px) scale(0.6); }
+            100% { opacity: 0; transform: translate(45px, 42px) scale(0.2); }
+        }
+        
+        @keyframes celebrationRight3 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(15px, -30px) scale(1.2); }
+            25% { opacity: 0.9; transform: translate(25px, -22px) scale(1); }
+            50% { opacity: 0.7; transform: translate(30px, 2px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(35px, 30px) scale(0.6); }
+            100% { opacity: 0; transform: translate(40px, 48px) scale(0.2); }
+        }
+        
+        @keyframes celebrationRight4 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(25px, -20px) scale(1.3); }
+            25% { opacity: 0.9; transform: translate(45px, -12px) scale(1); }
+            50% { opacity: 0.7; transform: translate(60px, 15px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(70px, 40px) scale(0.6); }
+            100% { opacity: 0; transform: translate(75px, 55px) scale(0.2); }
+        }
+        
+        @keyframes celebrationRight5 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(8px, -35px) scale(1.1); }
+            25% { opacity: 0.9; transform: translate(15px, -28px) scale(1); }
+            50% { opacity: 0.7; transform: translate(25px, -5px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(30px, 20px) scale(0.6); }
+            100% { opacity: 0; transform: translate(35px, 45px) scale(0.2); }
+        }
+        
+        @keyframes celebrationRight6 {
+            0% { opacity: 0; transform: translate(0, 0) scale(0); }
+            10% { opacity: 1; transform: translate(30px, -10px) scale(1.4); }
+            25% { opacity: 0.9; transform: translate(50px, -5px) scale(1); }
+            50% { opacity: 0.7; transform: translate(65px, 20px) scale(0.8); }
+            75% { opacity: 0.4; transform: translate(75px, 45px) scale(0.6); }
+            100% { opacity: 0; transform: translate(80px, 60px) scale(0.2); }
+        }
     </style>
 </head>
 <body class="font-sans bg-gray-50 dark:bg-gray-900 transition-colors duration-300" x-data="{ mobileMenuOpen: false, mobileSearchOpen: false }">
@@ -956,8 +1112,11 @@
                     </div>
                     <div class="p-4 space-y-4">
                         <template x-for="(auction, index) in auctions" :key="auction.id">
-                            <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0 relative transition-all duration-500"
-                                     :class="{ 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-600 rounded-lg p-3 -m-1': auction.highlighted }">
+                            <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0 relative transition-all duration-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg px-2 -mx-2"
+                                     :class="{ 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-600 rounded-lg p-3 -m-1': auction.highlighted }"
+                                     :id="'auction-' + auction.id"
+                                     @click="window.open('#auction-' + auction.id, '_blank')"
+                                     title="Bekijk veiling details">
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white" x-text="auction.title"></h3>
                                     <span class="px-2 py-1 rounded-full text-xs font-bold"
@@ -965,9 +1124,9 @@
                                           x-text="auction.ended ? 'Gesloten' : (auction.featured ? 'TOPVEILING' : 'Actief')"></span>
                                 </div>
                                 <div class="flex justify-between items-center">
-                                    <p class="text-lg font-bold transition-all duration-300"
-                                       :class="auction.highlighted ? 'text-green-700 dark:text-green-400 text-xl' : 'text-green-600'"
-                                       x-text="'€' + auction.currentBid.toLocaleString()"></p>
+                                    <p class="text-lg font-bold text-green-600 transition-colors duration-300"
+                                       x-text="'€' + auction.currentBid.toLocaleString()"
+                                       :id="'bid-' + auction.id"></p>
                                     <span class="text-xs font-semibold"
                                           :class="auction.ended ? 'text-gray-500' : (auction.timeLeft < 3600 ? 'text-red-600' : (auction.featured ? 'text-purple-600' : 'text-gray-500'))"
                                           x-text="auction.ended ? '✓ Afgelopen' : ('⏰ ' + formatTime(auction.timeLeft))"></span>
@@ -983,6 +1142,8 @@
                                      class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-b-lg text-xs font-bold shadow-lg">
                                     Nieuw bod!
                                 </div>
+                                <!-- Celebration Container -->
+                                <div class="celebration-container" :id="'celebration-' + auction.id"></div>
                             </article>
                         </template>
                     </div>
@@ -1906,10 +2067,126 @@
                 // Highlight the auction
                 randomAuction.highlighted = true;
                 
+                // Add price color animation sequence
+                const priceElement = document.getElementById(`bid-${randomAuction.id}`);
+                if (priceElement) {
+                    // Step 1: When highlight starts, change to red immediately
+                    priceElement.classList.remove('text-green-600');
+                    priceElement.classList.add('text-red-600');
+                    
+                    // Step 2: After highlight ends (3 seconds), fade back to green
+                    setTimeout(() => {
+                        priceElement.classList.remove('text-red-600');
+                        priceElement.classList.add('text-green-600');
+                    }, 6000); // 3000ms highlight + 3000ms red = 6000ms total
+                }
+                
+                // Create celebration effect
+                this.createCelebrationEffect(randomAuction.id);
+                
                 // Remove highlight after 3 seconds
                 setTimeout(() => {
                     randomAuction.highlighted = false;
                 }, 3000);
+            },
+            
+            createCelebrationEffect(auctionId) {
+                const container = document.getElementById(`celebration-${auctionId}`);
+                const auctionElement = document.getElementById(`auction-${auctionId}`);
+                
+                if (!container || !auctionElement) return;
+                
+                // Clear any existing particles
+                container.innerHTML = '';
+                
+                // Get the actual auction element dimensions (the content, not the container)
+                const auctionRect = auctionElement.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                
+                // Calculate the auction item's position relative to the container
+                const itemTop = auctionRect.top - containerRect.top;
+                const itemBottom = auctionRect.bottom - containerRect.top;
+                const itemHeight = itemBottom - itemTop;
+                const containerWidth = container.offsetWidth;
+                
+                // Create more emission points along the sides - distributed evenly plus random
+                const emissionPointsPerSide = 8 + Math.floor(Math.random() * 4); // 8-11 emission points per side
+                
+                // Left side particles - distributed along the actual auction item height
+                for (let i = 0; i < emissionPointsPerSide; i++) {
+                    // Mix of evenly distributed and random points
+                    let emissionY;
+                    if (i < emissionPointsPerSide * 0.6) {
+                        // 60% evenly distributed along the height
+                        emissionY = itemTop + (i / (emissionPointsPerSide * 0.6 - 1)) * itemHeight;
+                    } else {
+                        // 40% completely random
+                        emissionY = itemTop + (Math.random() * itemHeight);
+                    }
+                    
+                    const delay = Math.random() * 400; // Random delay 0-400ms
+                    this.createParticle(container, 0, emissionY, 'left', delay);
+                }
+                
+                // Right side particles - distributed along the actual auction item height
+                for (let i = 0; i < emissionPointsPerSide; i++) {
+                    // Mix of evenly distributed and random points
+                    let emissionY;
+                    if (i < emissionPointsPerSide * 0.6) {
+                        // 60% evenly distributed along the height
+                        emissionY = itemTop + (i / (emissionPointsPerSide * 0.6 - 1)) * itemHeight;
+                    } else {
+                        // 40% completely random
+                        emissionY = itemTop + (Math.random() * itemHeight);
+                    }
+                    
+                    const delay = Math.random() * 400; // Random delay 0-400ms
+                    this.createParticle(container, containerWidth, emissionY, 'right', delay);
+                }
+            },
+            
+            createParticle(container, originX, originY, direction, delay) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'celebration-particle';
+                    
+                    // Random particle properties
+                    const colors = ['primary', 'light', 'dark'];
+                    const shapes = ['', 'diamond']; // '' is circle, 'diamond' is rotated square
+                    const sizes = ['small', '', 'large']; // '' is medium/default
+                    
+                    // Set random properties
+                    particle.classList.add(colors[Math.floor(Math.random() * colors.length)]);
+                    
+                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                    if (shape) particle.classList.add(shape);
+                    
+                    const size = sizes[Math.floor(Math.random() * sizes.length)];
+                    if (size) particle.classList.add(size);
+                    
+                    // Position at origin point
+                    particle.style.left = originX + 'px';
+                    particle.style.top = originY + 'px';
+                    
+                    // Randomly select trajectory animation
+                    const trajectories = ['1', '2', '3', '4', '5', '6'];
+                    const randomTrajectory = trajectories[Math.floor(Math.random() * trajectories.length)];
+                    const animationName = `celebration${direction === 'left' ? 'Left' : 'Right'}${randomTrajectory}`;
+                    
+                    // Random duration for more variety
+                    const duration = 1.4 + Math.random() * 0.4; // 1.4s to 1.8s
+                    
+                    particle.style.animation = `${animationName} ${duration}s ease-out forwards`;
+                    
+                    container.appendChild(particle);
+                    
+                    // Remove particle after animation completes
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, duration * 1000 + 100); // Duration + small buffer
+                }, delay);
             },
             
             formatTime(seconds) {
