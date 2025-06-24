@@ -6,6 +6,7 @@ alwaysApply: true
 Load and read these reference documents first:
    - [static-mockup-manifest.md](mdc:_docs/static-mockup-manifest.md)
    - [styling-guidelines.md](mdc:_docs/styling-guidelines.md)
+   - [project-practices.md](mdc:_docs/project-practices.md)
 
 Confirm in chat by stating: "📖 References loaded" then continue your response on a new line below
 
