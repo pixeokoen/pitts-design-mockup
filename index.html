@@ -31,6 +31,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -50,7 +51,7 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="font-sans bg-gray-50" x-data="{ mobileMenuOpen: false, mobileSearchOpen: false }">
+<body class="font-sans bg-gray-50 dark:bg-gray-900 transition-colors duration-300" x-data="{ mobileMenuOpen: false, mobileSearchOpen: false }">
     <!-- Top Bar with Language and Notifications -->
     <div class="bg-primary-blue-dark text-white py-2">
         <div class="max-w-container mx-auto px-4 flex justify-between items-center text-sm">
@@ -127,7 +128,7 @@
     </div>
 
     <!-- Header -->
-    <header class="bg-white shadow-lg">
+    <header class="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-300">
         <div class="max-w-container mx-auto px-4">
             <!-- Logo and Content Layout -->
             <div class="flex items-center py-6 gap-8">
@@ -142,7 +143,7 @@
                 </div>
 
                 <!-- Vertical Separator -->
-                <div class="hidden lg:block w-px h-20 bg-gray-200"></div>
+                <div class="hidden lg:block w-px h-20 bg-gray-200 dark:bg-gray-600"></div>
 
                 <!-- Navigation Area -->
                 <!-- Alpine.js Component: HeaderContent -->
@@ -193,16 +194,122 @@
                             </div>
                         </div>
 
-                        <!-- Account -->
+                        <!-- Account - Dynamic based on user state -->
                         <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 bg-primary-blue-light rounded-full flex items-center justify-center">
-                                <i data-lucide="user" class="w-4 h-4 text-white"></i>
-                            </div>
-                            <div class="hidden lg:block">
-                                <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Inloggen</button>
-                                <span class="text-gray-400 mx-1">|</span>
-                                <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Account aanmaken</button>
-                            </div>
+                            <!-- Logged Out State -->
+                            <template x-if="$store.demoSettings.userState === 'loggedOut'">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-8 h-8 bg-primary-blue-light rounded-full flex items-center justify-center">
+                                        <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                                    </div>
+                                    <div class="hidden lg:block">
+                                        <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Inloggen</button>
+                                        <span class="text-gray-400 mx-1">|</span>
+                                        <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Account aanmaken</button>
+                                    </div>
+                                </div>
+                            </template>
+                            
+                            <!-- Logged In State -->
+                            <template x-if="$store.demoSettings.userState === 'loggedIn'">
+                                <div class="flex items-center space-x-2" x-data="{ userMenuOpen: false }">
+                                    <div class="relative">
+                                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2">
+                                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                                <i data-lucide="user-check" class="w-4 h-4 text-white"></i>
+                                            </div>
+                                            <div class="hidden lg:block text-left">
+                                                <div class="text-sm font-medium text-gray-800">Jan de Vries</div>
+                                                <div class="text-xs text-gray-500">Basis Lid</div>
+                                            </div>
+                                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 hidden lg:block" :class="{ 'rotate-180': userMenuOpen }"></i>
+                                        </button>
+                                        
+                                        <!-- User Menu Dropdown -->
+                                        <div x-show="userMenuOpen" 
+                                             @click.away="userMenuOpen = false" 
+                                             x-transition
+                                             class="absolute top-full right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border z-50">
+                                            <div class="py-2">
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                                    Mijn Profiel
+                                                </a>
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="heart" class="w-4 h-4 mr-2"></i>
+                                                    Favorieten
+                                                </a>
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                                    Instellingen
+                                                </a>
+                                                <hr class="my-1">
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+                                                    Uitloggen
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            
+                            <!-- Logged In Premium State -->
+                            <template x-if="$store.demoSettings.userState === 'loggedInPremium'">
+                                <div class="flex items-center space-x-2" x-data="{ userMenuOpen: false }">
+                                    <div class="relative">
+                                        <button @click="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2">
+                                            <div class="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center border-2 border-yellow-300">
+                                                <i data-lucide="crown" class="w-4 h-4 text-white"></i>
+                                            </div>
+                                            <div class="hidden lg:block text-left">
+                                                <div class="text-sm font-medium text-gray-800 flex items-center">
+                                                    Jan de Vries
+                                                    <i data-lucide="star" class="w-3 h-3 text-yellow-500 ml-1"></i>
+                                                </div>
+                                                <div class="text-xs text-yellow-600 font-medium">Premium Lid</div>
+                                            </div>
+                                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 hidden lg:block" :class="{ 'rotate-180': userMenuOpen }"></i>
+                                        </button>
+                                        
+                                        <!-- Premium User Menu Dropdown -->
+                                        <div x-show="userMenuOpen" 
+                                             @click.away="userMenuOpen = false" 
+                                             x-transition
+                                             class="absolute top-full right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border z-50">
+                                            <div class="py-2">
+                                                <div class="px-4 py-2 bg-yellow-50 border-b">
+                                                    <div class="flex items-center text-xs text-yellow-600 font-medium">
+                                                        <i data-lucide="crown" class="w-3 h-3 mr-1"></i>
+                                                        Premium Account
+                                                    </div>
+                                                </div>
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                                    Mijn Profiel
+                                                </a>
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="heart" class="w-4 h-4 mr-2"></i>
+                                                    Favorieten
+                                                </a>
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="star" class="w-4 h-4 mr-2 text-yellow-500"></i>
+                                                    Premium Functies
+                                                </a>
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                                    Instellingen
+                                                </a>
+                                                <hr class="my-1">
+                                                <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+                                                    Uitloggen
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
 
                         <!-- Mobile Menu Button -->
@@ -349,7 +456,7 @@
          x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100 transform translate-y-0"
          x-transition:leave-end="opacity-0 transform -translate-y-2"
-         class="lg:hidden bg-white border-t border-gray-200 shadow-lg">
+         class="lg:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg transition-colors duration-300">
         <div class="max-w-container mx-auto px-4 py-4">
             <!-- Mobile Search -->
             <div class="mb-4">
@@ -542,7 +649,7 @@
     <main class="max-w-container mx-auto px-4 py-8">
         <!-- Hero Section -->
         <section class="mb-12">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-colors duration-300">
                 <div class="md:flex">
                     <div class="md:w-1/2">
                         <div class="h-64 md:h-full bg-gradient-to-br from-primary-blue-light to-primary-blue-dark flex items-center justify-center">
@@ -555,18 +662,18 @@
                     </div>
                     <div class="md:w-1/2 p-8">
                         <div class="bg-primary-blue-dark text-white px-3 py-1 rounded-full text-xs inline-block mb-4">FEATURED</div>
-                        <h3 class="text-2xl font-bold text-primary-blue-dark mb-4">Welkom bij het nieuwe seizoen</h3>
-                        <p class="text-gray-600 mb-6">Ontdek de nieuwste ontwikkelingen in de duivensport, bekijk aankomende veilingen en blijf op de hoogte van alle prestaties en kampioenschappen.</p>
+                        <h3 class="text-2xl font-bold text-primary-blue-dark dark:text-white mb-4">Welkom bij het nieuwe seizoen</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6">Ontdek de nieuwste ontwikkelingen in de duivensport, bekijk aankomende veilingen en blijf op de hoogte van alle prestaties en kampioenschappen.</p>
                         <div class="space-y-2">
-                            <div class="flex items-center text-sm text-gray-600">
+                            <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
                                 <i data-lucide="trophy" class="w-4 h-4 text-primary-blue-light mr-2"></i>
                                 <span>Actieve kampioenschappen: 12</span>
                             </div>
-                            <div class="flex items-center text-sm text-gray-600">
+                            <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
                                 <i data-lucide="gavel" class="w-4 h-4 text-primary-blue-light mr-2"></i>
                                 <span>Lopende veilingen: 8</span>
                             </div>
-                            <div class="flex items-center text-sm text-gray-600">
+                            <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
                                 <i data-lucide="newspaper" class="w-4 h-4 text-primary-blue-light mr-2"></i>
                                 <span>Nieuwe artikelen deze week: 15</span>
                             </div>
@@ -584,13 +691,13 @@
             <!-- Latest News -->
             <div class="md:col-span-2">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-primary-blue-dark">Laatste Nieuws</h2>
+                    <h2 class="text-2xl font-bold text-primary-blue-dark dark:text-white">Laatste Nieuws</h2>
                     <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Alle nieuws →</a>
                 </div>
                 
                 <div class="space-y-6">
                     <!-- News Item 1 -->
-                    <article class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-colors duration-300">
                         <div class="md:flex">
                             <div class="md:w-1/3">
                                 <div class="h-48 md:h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
@@ -602,8 +709,8 @@
                                     <span class="bg-primary-blue-light text-white px-2 py-1 rounded-full text-xs">Kampioenschappen</span>
                                     <span class="text-gray-500 text-sm">2 uur geleden</span>
                                 </div>
-                                <h3 class="text-xl font-bold text-primary-blue-dark mb-2">Recordbrekende prestatie in nationale wedstrijd</h3>
-                                <p class="text-gray-600 mb-4">Een bijzondere prestatie werd deze week geleverd tijdens de nationale wedstrijd, waarbij meerdere records werden gebroken...</p>
+                                <h3 class="text-xl font-bold text-primary-blue-dark dark:text-white mb-2">Recordbrekende prestatie in nationale wedstrijd</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4">Een bijzondere prestatie werd deze week geleverd tijdens de nationale wedstrijd, waarbij meerdere records werden gebroken...</p>
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center text-sm text-gray-500">
                                         <i data-lucide="user" class="w-3 h-3 mr-1"></i>
@@ -616,7 +723,7 @@
                     </article>
 
                     <!-- News Item 2 -->
-                    <article class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-colors duration-300">
                         <div class="md:flex">
                             <div class="md:w-1/3">
                                 <div class="h-48 md:h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
@@ -628,8 +735,8 @@
                                     <span class="bg-primary-blue-dark text-white px-2 py-1 rounded-full text-xs">Veilingen</span>
                                     <span class="text-gray-500 text-sm">5 uur geleden</span>
                                 </div>
-                                <h3 class="text-xl font-bold text-primary-blue-dark mb-2">Topduiven bereiken recordprijzen</h3>
-                                <p class="text-gray-600 mb-4">De laatste veiling heeft opnieuw bewezen dat kwaliteitsduiven zeer gewild zijn, met prijzen die alle verwachtingen overtroffen...</p>
+                                <h3 class="text-xl font-bold text-primary-blue-dark dark:text-white mb-2">Topduiven bereiken recordprijzen</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4">De laatste veiling heeft opnieuw bewezen dat kwaliteitsduiven zeer gewild zijn, met prijzen die alle verwachtingen overtroffen...</p>
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center text-sm text-gray-500">
                                         <i data-lucide="user" class="w-3 h-3 mr-1"></i>
@@ -646,22 +753,22 @@
             <!-- Sidebar -->
             <div>
                 <!-- Active Auctions -->
-                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                    <h3 class="text-lg font-bold text-primary-blue-dark mb-4">Actieve Veilingen</h3>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-300">
+                    <h3 class="text-lg font-bold text-primary-blue-dark dark:text-white mb-4">Actieve Veilingen</h3>
                     <div class="space-y-4">
                         <div class="border-l-4 border-primary-blue-light pl-4">
-                            <h4 class="font-medium text-primary-blue-dark">Topkweek Janssen</h4>
-                            <p class="text-sm text-gray-600">Hoogste bod: €2,450</p>
+                            <h4 class="font-medium text-primary-blue-dark dark:text-white">Topkweek Janssen</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Hoogste bod: €2,450</p>
                             <p class="text-xs text-red-600">Eindigt over 2u 15m</p>
                         </div>
                         <div class="border-l-4 border-primary-blue-light pl-4">
-                            <h4 class="font-medium text-primary-blue-dark">Kampioensduif 2024</h4>
-                            <p class="text-sm text-gray-600">Hoogste bod: €1,890</p>
+                            <h4 class="font-medium text-primary-blue-dark dark:text-white">Kampioensduif 2024</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Hoogste bod: €1,890</p>
                             <p class="text-xs text-red-600">Eindigt over 5u 30m</p>
                         </div>
                         <div class="border-l-4 border-primary-blue-light pl-4">
-                            <h4 class="font-medium text-primary-blue-dark">Snelheidskampioen</h4>
-                            <p class="text-sm text-gray-600">Hoogste bod: €3,200</p>
+                            <h4 class="font-medium text-primary-blue-dark dark:text-white">Snelheidskampioen</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">Hoogste bod: €3,200</p>
                             <p class="text-xs text-red-600">Eindigt over 1d 3u</p>
                         </div>
                     </div>
@@ -669,32 +776,72 @@
                 </div>
 
                 <!-- Quick Stats -->
-                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                    <h3 class="text-lg font-bold text-primary-blue-dark mb-4">Statistieken</h3>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-300">
+                    <h3 class="text-lg font-bold text-primary-blue-dark dark:text-white mb-4">Statistieken</h3>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Actieve leden</span>
-                            <span class="font-bold text-primary-blue-dark">1,247</span>
+                            <span class="text-gray-600 dark:text-gray-300">Actieve leden</span>
+                            <span class="font-bold text-primary-blue-dark dark:text-white">1,247</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Lopende veilingen</span>
-                            <span class="font-bold text-primary-blue-dark">23</span>
+                            <span class="text-gray-600 dark:text-gray-300">Lopende veilingen</span>
+                            <span class="font-bold text-primary-blue-dark dark:text-white">23</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Deze maand verkocht</span>
-                            <span class="font-bold text-primary-blue-dark">156</span>
+                            <span class="text-gray-600 dark:text-gray-300">Deze maand verkocht</span>
+                            <span class="font-bold text-primary-blue-dark dark:text-white">156</span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-gray-600">Gemiddelde prijs</span>
-                            <span class="font-bold text-primary-blue-dark">€1,425</span>
+                            <span class="text-gray-600 dark:text-gray-300">Gemiddelde prijs</span>
+                            <span class="font-bold text-primary-blue-dark dark:text-white">€1,425</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Advertisement Space -->
-                <div class="bg-gray-100 rounded-lg p-8 text-center">
-                    <p class="text-gray-500 mb-2">Advertentie</p>
-                    <p class="text-xs text-gray-400">300 x 250</p>
+                <!-- Premium Features (only for premium users) -->
+                <div x-show="$store.demoSettings.userState === 'loggedInPremium'" 
+                     x-transition
+                     class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900 dark:to-yellow-800 rounded-lg p-6 mb-6 border border-yellow-200 dark:border-yellow-700 transition-colors duration-300">
+                    <h3 class="text-lg font-bold text-yellow-800 dark:text-yellow-200 mb-4 flex items-center">
+                        <i data-lucide="crown" class="w-5 h-5 mr-2"></i>
+                        Premium Functies
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center text-sm text-yellow-700 dark:text-yellow-300">
+                            <i data-lucide="check" class="w-4 h-4 mr-2"></i>
+                            Exclusieve veilingen
+                        </div>
+                        <div class="flex items-center text-sm text-yellow-700 dark:text-yellow-300">
+                            <i data-lucide="check" class="w-4 h-4 mr-2"></i>
+                            Geavanceerde statistieken
+                        </div>
+                        <div class="flex items-center text-sm text-yellow-700 dark:text-yellow-300">
+                            <i data-lucide="check" class="w-4 h-4 mr-2"></i>
+                            Prioriteit ondersteuning
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upgrade CTA (only for logged in basic users) -->
+                <div x-show="$store.demoSettings.userState === 'loggedIn'" 
+                     x-transition
+                     class="bg-gradient-to-br from-primary-blue-light to-primary-blue-dark rounded-lg p-6 mb-6 text-white">
+                    <h3 class="text-lg font-bold mb-2 flex items-center">
+                        <i data-lucide="star" class="w-5 h-5 mr-2"></i>
+                        Upgrade naar Premium
+                    </h3>
+                    <p class="text-sm text-blue-100 mb-4">Ontgrendel exclusieve functies en krijg toegang tot premium veilingen.</p>
+                    <button class="bg-white text-primary-blue-dark px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors">
+                        Upgrade Nu
+                    </button>
+                </div>
+
+                <!-- Advertisement Space (only for logged out users) -->
+                <div x-show="$store.demoSettings.userState === 'loggedOut'" 
+                     x-transition
+                     class="bg-gray-100 dark:bg-gray-700 rounded-lg p-8 text-center transition-colors duration-300">
+                    <p class="text-gray-500 dark:text-gray-300 mb-2">Advertentie</p>
+                    <p class="text-xs text-gray-400 dark:text-gray-400">300 x 250</p>
                 </div>
             </div>
         </div>
@@ -758,6 +905,119 @@
         </div>
     </footer>
 
+    <!-- Demo Settings Panel -->
+    <div class="fixed bottom-4 right-4 z-50" x-data="{}" x-init="$store.demoSettings.init()">
+        <!-- Settings Toggle Button -->
+        <button @click="$store.demoSettings.togglePanel()" 
+                class="bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 mb-2"
+                :class="{ 'rotate-45': $store.demoSettings.panelOpen }">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+        </button>
+        
+        <!-- Settings Panel -->
+        <div x-show="$store.demoSettings.panelOpen" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform translate-y-4 scale-95"
+             x-transition:enter-end="opacity-100 transform translate-y-0 scale-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100 transform translate-y-0 scale-100"
+             x-transition:leave-end="opacity-0 transform translate-y-4 scale-95"
+             @click.away="$store.demoSettings.panelOpen = false"
+             class="bg-white dark:bg-gray-800 rounded-lg shadow-xl border dark:border-gray-700 p-4 w-64 mb-2">
+            
+            <!-- Panel Header -->
+            <div class="flex items-center justify-between mb-4 pb-2 border-b dark:border-gray-700">
+                <h3 class="text-sm font-bold text-gray-800 dark:text-white flex items-center">
+                    <i data-lucide="monitor" class="w-4 h-4 mr-2"></i>
+                    Demo Settings
+                </h3>
+                <button @click="$store.demoSettings.panelOpen = false" 
+                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            
+            <!-- User State Section -->
+            <div class="mb-4">
+                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <i data-lucide="user" class="w-3 h-3 inline mr-1"></i>
+                    User State
+                </label>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="radio" 
+                               name="userState" 
+                               value="loggedOut"
+                               @change="$store.demoSettings.setUserState('loggedOut')"
+                               :checked="$store.demoSettings.userState === 'loggedOut'"
+                               class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Logged Out</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" 
+                               name="userState" 
+                               value="loggedIn"
+                               @change="$store.demoSettings.setUserState('loggedIn')"
+                               :checked="$store.demoSettings.userState === 'loggedIn'"
+                               class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Logged In</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" 
+                               name="userState" 
+                               value="loggedInPremium"
+                               @change="$store.demoSettings.setUserState('loggedInPremium')"
+                               :checked="$store.demoSettings.userState === 'loggedInPremium'"
+                               class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
+                        <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
+                            Logged In Premium
+                            <i data-lucide="crown" class="w-3 h-3 ml-1 text-yellow-500"></i>
+                        </span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Theme Mode Section -->
+            <div class="mb-4">
+                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <i data-lucide="palette" class="w-3 h-3 inline mr-1"></i>
+                    Theme Mode
+                </label>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="radio" 
+                               name="themeMode" 
+                               value="light"
+                               @change="$store.demoSettings.setThemeMode('light')"
+                               :checked="$store.demoSettings.themeMode === 'light'"
+                               class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
+                        <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
+                            <i data-lucide="sun" class="w-3 h-3 mr-1"></i>
+                            Light
+                        </span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" 
+                               name="themeMode" 
+                               value="dark"
+                               @change="$store.demoSettings.setThemeMode('dark')"
+                               :checked="$store.demoSettings.themeMode === 'dark'"
+                               class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
+                        <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
+                            <i data-lucide="moon" class="w-3 h-3 mr-1"></i>
+                            Dark
+                        </span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Panel Footer -->
+            <div class="text-xs text-gray-500 dark:text-gray-400 text-center pt-2 border-t dark:border-gray-700">
+                Demo Panel • Settings persist in localStorage
+            </div>
+        </div>
+    </div>
+
     <script>
         // Alpine.js is now handling all interactivity
         // Additional custom JavaScript can be added here if needed
@@ -804,6 +1064,46 @@
                 currency: 'EUR' 
             }).format(price)
         };
+        
+        // Demo Settings Store
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('demoSettings', {
+                userState: localStorage.getItem('pitts_demo_userState') || 'loggedOut',
+                themeMode: localStorage.getItem('pitts_demo_themeMode') || 'light',
+                panelOpen: false,
+                
+                setUserState(state) {
+                    this.userState = state;
+                    localStorage.setItem('pitts_demo_userState', state);
+                    console.log('User state changed to:', state);
+                },
+                
+                setThemeMode(mode) {
+                    this.themeMode = mode;
+                    localStorage.setItem('pitts_demo_themeMode', mode);
+                    // Apply theme to document
+                    if (mode === 'dark') {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                    console.log('Theme mode changed to:', mode);
+                },
+                
+                togglePanel() {
+                    this.panelOpen = !this.panelOpen;
+                },
+                
+                init() {
+                    // Apply saved theme on load
+                    this.setThemeMode(this.themeMode);
+                    console.log('Demo settings initialized:', {
+                        userState: this.userState,
+                        themeMode: this.themeMode
+                    });
+                }
+            });
+        });
         
         // Timezone component function
         window.timezoneComponent = () => ({
