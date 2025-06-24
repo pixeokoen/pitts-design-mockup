@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PITTS - Pigeons Into The Sky</title>
+    
+    <!-- Favicon and Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="assets/icons/manifest.json">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#273661">
+    <meta name="msapplication-TileImage" content="assets/icons/ms-icon-144x144.png">
+    <meta name="msapplication-config" content="assets/icons/browserconfig.xml">
+    <meta name="theme-color" content="#4E8ABD">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': {
+                            'light': '#4E8ABD',
+                            'dark': '#273661',
+                        }
+                    },
+                    maxWidth: {
+                        'container': '1200px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="font-sans bg-gray-50" x-data="{ mobileMenuOpen: false, mobileSearchOpen: false }">
+    <!-- Top Bar with Language and Notifications -->
+    <div class="bg-primary-blue-dark text-white py-2">
+        <div class="max-w-container mx-auto px-4 flex justify-between items-center text-sm">
+            <!-- Alpine.js Component: TimezoneClock -->
+            <!-- Data: currentTime, selectedTimezone, timezones, dropdownOpen, currentOffset -->
+            <div class="flex items-center space-x-4" x-data="timezoneComponent()" x-cloak>
+                <!-- Real-time Clock with Timezone Info -->
+                <div class="flex items-center">
+                    <i data-lucide="clock" class="w-4 h-4 inline mr-1"></i>
+                    <span x-text="currentTime" class="font-mono mr-2"></span>
+                    
+                    <!-- Timezone Selector -->
+                    <div class="relative">
+                        <button @click="dropdownOpen = !dropdownOpen" 
+                                class="text-white hover:text-gray-200 transition-colors flex items-center bg-white bg-opacity-10 px-2 py-1 rounded text-xs">
+                            <span x-text="getSelectedTimezoneInfo().offset" class="font-mono mr-1"></span>
+                            <span x-text="getSelectedTimezoneInfo().label.split(' ')[0]" class="mr-1"></span>
+                            <i data-lucide="chevron-down" class="w-3 h-3" :class="{ 'rotate-180': dropdownOpen }"></i>
+                        </button>
+                        
+                        <!-- Timezone Dropdown -->
+                        <div x-show="dropdownOpen" 
+                             @click.away="dropdownOpen = false" 
+                             x-transition
+                             class="absolute top-full left-0 mt-1 bg-white text-gray-900 rounded shadow-lg py-1 text-xs min-w-[280px] z-50 max-h-80 overflow-y-auto">
+                            <div class="px-3 py-2 bg-gray-50 font-semibold text-gray-700 border-b">
+                                Selecteer Tijdzone
+                            </div>
+                            
+                            <div>
+                                <template x-for="timezone in timezones" :key="timezone.value">
+                                    <button @click="changeTimezone(timezone.value)" 
+                                            class="flex justify-between items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
+                                            :class="{ 'bg-primary-blue-light text-white hover:bg-primary-blue-dark': timezone.value === selectedTimezone }">
+                                        <span x-text="timezone.label"></span>
+                                        <span x-text="timezone.offset" class="font-mono text-gray-500" :class="{ 'text-gray-200': timezone.value === selectedTimezone }"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Language Selector -->
+                <!-- Alpine.js Component: LanguageSelector -->
+                <!-- Data: selectedLanguage, languages -->
+                <div class="flex items-center space-x-2" x-data="{ selectedLang: 'nl', open: false }">
+                    <span class="text-xs">Taal:</span>
+                    <div class="relative">
+                        <button @click="open = !open" class="bg-transparent text-white text-xs border-none focus:outline-none flex items-center">
+                            <span x-text="selectedLang.toUpperCase()"></span>
+                            <i data-lucide="chevron-down" class="w-3 h-3 ml-1" :class="{ 'rotate-180': open }"></i>
+                        </button>
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute top-full left-0 mt-1 bg-white text-gray-900 rounded shadow-lg py-1 text-xs min-w-[100px] z-50">
+                            <button @click="selectedLang = 'nl'; open = false" class="block w-full text-left px-3 py-1 hover:bg-gray-100">Nederlands</button>
+                            <button @click="selectedLang = 'fr'; open = false" class="block w-full text-left px-3 py-1 hover:bg-gray-100">Français</button>
+                            <button @click="selectedLang = 'en'; open = false" class="block w-full text-left px-3 py-1 hover:bg-gray-100">English</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Social Links -->
+                <a href="#" class="hover:text-primary-blue-light transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                <a href="#" class="hover:text-primary-blue-light transition-colors"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                <a href="#" class="hover:text-primary-blue-light transition-colors"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-lg">
+        <div class="max-w-container mx-auto px-4">
+            <!-- Logo and Content Layout -->
+            <div class="flex items-center py-6 gap-8">
+                <!-- Logo - Takes only needed space -->
+                <!-- Alpine.js Component: LogoBrand -->
+                <!-- Data: variant (landscape/square/small), theme (default/white) -->
+                <div class="flex-shrink-0">
+                    <img src="assets/images/logo/pitts-logo-landscape.svg" 
+                         alt="PITTS - Pigeons Into The Sky" 
+                         class="h-24 w-auto"
+                         onerror="this.src='assets/images/logo/pitts-logo-landscape.png'">
+                </div>
+
+                <!-- Vertical Separator -->
+                <div class="hidden lg:block w-px h-20 bg-gray-200"></div>
+
+                <!-- Navigation Area -->
+                <!-- Alpine.js Component: HeaderContent -->
+                <!-- Data: isAuthenticated, notificationCount, activeRoute, searchQuery -->
+                <div class="flex-1 flex flex-col justify-between min-h-[4rem]" x-data="{ searchQuery: '', notificationCount: 3, isAuthenticated: false }">
+                    <!-- Top Row - Search and Account (Right aligned) -->
+                    <div class="flex items-center justify-end space-x-4 mb-3">
+                        <!-- Search -->
+                        <!-- Alpine.js Component: SearchBox -->
+                        <!-- Data: searchQuery, searchResults -->
+                        <div class="hidden md:block relative">
+                            <input type="search" placeholder="Zoeken..." 
+                                   x-model="searchQuery" 
+                                   @input.debounce.300ms="console.log('Search:', searchQuery)"
+                                   class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue-light w-64">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        
+                        <!-- Notifications -->
+                        <!-- Alpine.js Component: NotificationBell -->
+                        <!-- Data: notificationCount, notifications -->
+                        <div class="relative" x-data="{ showNotifications: false }">
+                            <button @click="showNotifications = !showNotifications" 
+                                    class="text-gray-600 hover:text-primary-blue-light transition-colors relative">
+                                <i data-lucide="bell" class="w-5 h-5"></i>
+                                <span x-show="notificationCount > 0" 
+                                      x-text="notificationCount" 
+                                      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"></span>
+                            </button>
+                            <!-- Notification Dropdown -->
+                            <div x-show="showNotifications" 
+                                 @click.away="showNotifications = false" 
+                                 x-transition
+                                 class="absolute top-full right-0 mt-2 w-80 bg-white shadow-lg rounded-lg border z-50">
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-gray-800 mb-2">Notificaties</h3>
+                                    <div class="space-y-2">
+                                        <div class="p-2 bg-gray-50 rounded text-sm">
+                                            <p class="font-medium">Nieuwe veiling gestart</p>
+                                            <p class="text-gray-600">Topkweek Janssen - 2 minuten geleden</p>
+                                        </div>
+                                        <div class="p-2 bg-gray-50 rounded text-sm">
+                                            <p class="font-medium">Bod verhoogd</p>
+                                            <p class="text-gray-600">Uw bod is overtroffen - 5 minuten geleden</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account -->
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-primary-blue-light rounded-full flex items-center justify-center">
+                                <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                            </div>
+                            <div class="hidden lg:block">
+                                <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Inloggen</button>
+                                <span class="text-gray-400 mx-1">|</span>
+                                <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Account aanmaken</button>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Menu Button -->
+                        <!-- Alpine.js Component: MobileMenuToggle -->
+                        <!-- Data: mobileMenuOpen -->
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                                class="lg:hidden text-gray-600 hover:text-primary-blue-light transition-colors">
+                            <i data-lucide="menu" class="w-5 h-5" x-show="!mobileMenuOpen"></i>
+                            <i data-lucide="x" class="w-5 h-5" x-show="mobileMenuOpen"></i>
+                        </button>
+                    </div>
+
+                    <!-- Bottom Row - Navigation (Right aligned) -->
+                    <!-- Alpine.js Component: MainNavigation -->
+                    <!-- Data: activeRoute, menuItems, dropdownStates -->
+                    <nav class="hidden lg:block" x-data="{ articlesOpen: false }">
+                        <ul class="flex items-center justify-end space-x-8">
+                            <li><a href="#" class="text-primary-blue-dark hover:text-primary-blue-light transition-colors font-medium border-b-2 border-primary-blue-light pb-1">Home</a></li>
+                            <li class="relative">
+                                <a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium flex items-center">
+                                    Nieuws <i data-lucide="chevron-down" class="w-3 h-3 ml-1"></i>
+                                </a>
+                            </li>
+                            <li class="relative">
+                                <button @click="articlesOpen = !articlesOpen" 
+                                        @click.away="articlesOpen = false"
+                                        class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium flex items-center">
+                                    Artikels <i data-lucide="chevron-down" class="w-3 h-3 ml-1" :class="{ 'rotate-180': articlesOpen }"></i>
+                                </button>
+                                <!-- Dropdown for Artikels -->
+                                <div x-show="articlesOpen" 
+                                     x-transition
+                                     class="absolute top-full left-0 mt-1 w-48 bg-white shadow-lg rounded-md z-50">
+                                    <div class="py-2">
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors">Kampioenschappen</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors">Prestaties</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors">Veterinair</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors">Verenigingsnieuws</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors">Reportages</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Veilingen</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Bonverkopen</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Vraag & Aanbod</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Webshop</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <!-- Alpine.js Component: MobileMenu -->
+    <!-- Data: mobileMenuOpen, activeRoute -->
+    <div x-show="mobileMenuOpen" 
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 transform -translate-y-2"
+         x-transition:enter-end="opacity-100 transform translate-y-0"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100 transform translate-y-0"
+         x-transition:leave-end="opacity-0 transform -translate-y-2"
+         class="lg:hidden bg-white border-t border-gray-200 shadow-lg">
+        <div class="max-w-container mx-auto px-4 py-4">
+            <!-- Mobile Search -->
+            <div class="mb-4">
+                <div class="relative">
+                    <input type="search" placeholder="Zoeken..." 
+                           x-model="searchQuery"
+                           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue-light">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation -->
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="#" class="block py-2 text-primary-blue-dark font-medium border-b border-primary-blue-light">Home</a></li>
+                    <li><a href="#" class="block py-2 text-gray-700 hover:text-primary-blue-light transition-colors">Nieuws</a></li>
+                    <li x-data="{ mobileArticlesOpen: false }">
+                        <button @click="mobileArticlesOpen = !mobileArticlesOpen" 
+                                class="flex items-center justify-between w-full py-2 text-gray-700 hover:text-primary-blue-light transition-colors">
+                            <span>Artikels</span>
+                            <i data-lucide="chevron-down" class="w-3 h-3" :class="{ 'rotate-180': mobileArticlesOpen }"></i>
+                        </button>
+                        <div x-show="mobileArticlesOpen" x-transition class="pl-4 mt-2 space-y-1">
+                            <a href="#" class="block py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">Kampioenschappen</a>
+                            <a href="#" class="block py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">Prestaties</a>
+                            <a href="#" class="block py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">Veterinair</a>
+                            <a href="#" class="block py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">Verenigingsnieuws</a>
+                            <a href="#" class="block py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">Reportages</a>
+                        </div>
+                    </li>
+                    <li><a href="#" class="block py-2 text-gray-700 hover:text-primary-blue-light transition-colors">Veilingen</a></li>
+                    <li><a href="#" class="block py-2 text-gray-700 hover:text-primary-blue-light transition-colors">Bonverkopen</a></li>
+                    <li><a href="#" class="block py-2 text-gray-700 hover:text-primary-blue-light transition-colors">Vraag & Aanbod</a></li>
+                    <li><a href="#" class="block py-2 text-gray-700 hover:text-primary-blue-light transition-colors">Webshop</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Account Section -->
+            <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="flex items-center space-x-3 mb-3">
+                    <div class="w-10 h-10 bg-primary-blue-light rounded-full flex items-center justify-center">
+                        <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <button class="block text-primary-blue-dark hover:text-primary-blue-light transition-colors font-medium">Inloggen</button>
+                        <button class="block text-sm text-gray-600 hover:text-primary-blue-light transition-colors">Account aanmaken</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breaking News/Featured Banner -->
+    <!-- Alpine.js Component: BreakingNewsTicker -->
+    <!-- Data: newsItems, currentIndex, autoPlay -->
+    <div class="bg-primary-blue-light text-white" x-data="{ 
+        newsItems: [
+            'Nieuwe nationale recordhouder gevestigd!',
+            'Komende veilingen vol topduiven',
+            'Seizoensresultaten overtreffen verwachtingen',
+            'Nieuwe functionaliteiten toegevoegd aan platform'
+        ],
+        currentIndex: 0,
+        autoPlay: true
+    }" x-init="
+        if (autoPlay) {
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % newsItems.length;
+            }, 4000);
+        }
+    ">
+        <div class="max-w-container mx-auto px-4 py-3 flex items-center">
+            <span class="bg-white text-primary-blue-light px-3 py-1 text-sm font-bold mr-4 rounded flex items-center">
+                <i data-lucide="zap" class="w-3 h-3 mr-1"></i>
+                BREAKING
+            </span>
+            <div class="flex-1 overflow-hidden">
+                <div class="text-sm flex items-center">
+                    <i data-lucide="trophy" class="w-4 h-4 mr-2" x-show="currentIndex === 0"></i>
+                    <i data-lucide="calendar" class="w-4 h-4 mr-2" x-show="currentIndex === 1"></i>
+                    <i data-lucide="award" class="w-4 h-4 mr-2" x-show="currentIndex === 2"></i>
+                    <i data-lucide="rocket" class="w-4 h-4 mr-2" x-show="currentIndex === 3"></i>
+                    <span x-text="newsItems[currentIndex]"></span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center space-x-2 ml-4">
+                <button @click="currentIndex = (currentIndex - 1 + newsItems.length) % newsItems.length" 
+                        class="text-white hover:text-gray-200 transition-colors">
+                    <i data-lucide="chevron-left" class="w-3 h-3"></i>
+                </button>
+                <button @click="currentIndex = (currentIndex + 1) % newsItems.length" 
+                        class="text-white hover:text-gray-200 transition-colors">
+                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="mb-12">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="md:flex">
+                    <div class="md:w-1/2">
+                        <div class="h-64 md:h-full bg-gradient-to-br from-primary-blue-light to-primary-blue-dark flex items-center justify-center">
+                            <div class="text-center text-white">
+                                <i data-lucide="trophy" class="w-16 h-16 mx-auto mb-4"></i>
+                                <h2 class="text-2xl font-bold">Seizoen 2025</h2>
+                                <p class="text-primary-blue-light bg-white bg-opacity-20 px-4 py-2 rounded-full mt-2">Nu Live</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 p-8">
+                        <div class="bg-primary-blue-dark text-white px-3 py-1 rounded-full text-xs inline-block mb-4">FEATURED</div>
+                        <h3 class="text-2xl font-bold text-primary-blue-dark mb-4">Welkom bij het nieuwe seizoen</h3>
+                        <p class="text-gray-600 mb-6">Ontdek de nieuwste ontwikkelingen in de duivensport, bekijk aankomende veilingen en blijf op de hoogte van alle prestaties en kampioenschappen.</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i data-lucide="trophy" class="w-4 h-4 text-primary-blue-light mr-2"></i>
+                                <span>Actieve kampioenschappen: 12</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i data-lucide="gavel" class="w-4 h-4 text-primary-blue-light mr-2"></i>
+                                <span>Lopende veilingen: 8</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i data-lucide="newspaper" class="w-4 h-4 text-primary-blue-light mr-2"></i>
+                                <span>Nieuwe artikelen deze week: 15</span>
+                            </div>
+                        </div>
+                        <button class="mt-6 bg-primary-blue-light text-white px-6 py-3 rounded-lg hover:bg-primary-blue-dark transition-colors">
+                            Bekijk alle updates
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Grid -->
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Latest News -->
+            <div class="md:col-span-2">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold text-primary-blue-dark">Laatste Nieuws</h2>
+                    <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Alle nieuws →</a>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- News Item 1 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="md:flex">
+                            <div class="md:w-1/3">
+                                <div class="h-48 md:h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                                    <i data-lucide="image" class="w-8 h-8 text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div class="md:w-2/3 p-6">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="bg-primary-blue-light text-white px-2 py-1 rounded-full text-xs">Kampioenschappen</span>
+                                    <span class="text-gray-500 text-sm">2 uur geleden</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-primary-blue-dark mb-2">Recordbrekende prestatie in nationale wedstrijd</h3>
+                                <p class="text-gray-600 mb-4">Een bijzondere prestatie werd deze week geleverd tijdens de nationale wedstrijd, waarbij meerdere records werden gebroken...</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <i data-lucide="user" class="w-3 h-3 mr-1"></i>
+                                        <span>Jan Vermeulen</span>
+                                    </div>
+                                    <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Lees meer →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- News Item 2 -->
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="md:flex">
+                            <div class="md:w-1/3">
+                                <div class="h-48 md:h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                                    <i data-lucide="image" class="w-8 h-8 text-gray-400"></i>
+                                </div>
+                            </div>
+                            <div class="md:w-2/3 p-6">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="bg-primary-blue-dark text-white px-2 py-1 rounded-full text-xs">Veilingen</span>
+                                    <span class="text-gray-500 text-sm">5 uur geleden</span>
+                                </div>
+                                <h3 class="text-xl font-bold text-primary-blue-dark mb-2">Topduiven bereiken recordprijzen</h3>
+                                <p class="text-gray-600 mb-4">De laatste veiling heeft opnieuw bewezen dat kwaliteitsduiven zeer gewild zijn, met prijzen die alle verwachtingen overtroffen...</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <i data-lucide="user" class="w-3 h-3 mr-1"></i>
+                                        <span>Marie Dubois</span>
+                                    </div>
+                                    <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Lees meer →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div>
+                <!-- Active Auctions -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-bold text-primary-blue-dark mb-4">Actieve Veilingen</h3>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-primary-blue-light pl-4">
+                            <h4 class="font-medium text-primary-blue-dark">Topkweek Janssen</h4>
+                            <p class="text-sm text-gray-600">Hoogste bod: €2,450</p>
+                            <p class="text-xs text-red-600">Eindigt over 2u 15m</p>
+                        </div>
+                        <div class="border-l-4 border-primary-blue-light pl-4">
+                            <h4 class="font-medium text-primary-blue-dark">Kampioensduif 2024</h4>
+                            <p class="text-sm text-gray-600">Hoogste bod: €1,890</p>
+                            <p class="text-xs text-red-600">Eindigt over 5u 30m</p>
+                        </div>
+                        <div class="border-l-4 border-primary-blue-light pl-4">
+                            <h4 class="font-medium text-primary-blue-dark">Snelheidskampioen</h4>
+                            <p class="text-sm text-gray-600">Hoogste bod: €3,200</p>
+                            <p class="text-xs text-red-600">Eindigt over 1d 3u</p>
+                        </div>
+                    </div>
+                    <a href="#" class="block text-center mt-4 text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Alle veilingen →</a>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-bold text-primary-blue-dark mb-4">Statistieken</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Actieve leden</span>
+                            <span class="font-bold text-primary-blue-dark">1,247</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Lopende veilingen</span>
+                            <span class="font-bold text-primary-blue-dark">23</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Deze maand verkocht</span>
+                            <span class="font-bold text-primary-blue-dark">156</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Gemiddelde prijs</span>
+                            <span class="font-bold text-primary-blue-dark">€1,425</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advertisement Space -->
+                <div class="bg-gray-100 rounded-lg p-8 text-center">
+                    <p class="text-gray-500 mb-2">Advertentie</p>
+                    <p class="text-xs text-gray-400">300 x 250</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary-blue-dark text-white mt-16">
+        <div class="max-w-container mx-auto px-4 py-12">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- About -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary-blue-light text-white px-3 py-2 rounded-lg mr-3">
+                            <i data-lucide="home" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold">PITTS</h3>
+                    </div>
+                    <p class="text-gray-300 text-sm">Pigeons Into The Sky - Uw platform voor duivensport, veilingen en nieuws.</p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-bold mb-4">Snelle Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Nieuws</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Veilingen</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Artikels</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Webshop</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Categories -->
+                <div>
+                    <h4 class="font-bold mb-4">Categorieën</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Kampioenschappen</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Prestaties</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Veterinair</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Verenigingsnieuws</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="font-bold mb-4">Contact</h4>
+                    <div class="space-y-2 text-sm text-gray-300">
+                        <p><i data-lucide="mail" class="w-4 h-4 inline mr-2"></i> info@pitts.be</p>
+                        <p><i data-lucide="phone" class="w-4 h-4 inline mr-2"></i> +32 123 456 789</p>
+                        <div class="flex space-x-3 mt-4">
+                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-600 mt-8 pt-8 text-center text-sm text-gray-300">
+                <p>&copy; 2025 PITTS - Pigeons Into The Sky. Alle rechten voorbehouden.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Alpine.js is now handling all interactivity
+        // Additional custom JavaScript can be added here if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing...');
+            
+            // Initialize Lucide icons after a small delay to ensure Alpine.js is ready
+            setTimeout(() => {
+                lucide.createIcons();
+                console.log('Lucide icons initialized');
+            }, 100);
+            
+            console.log('PITTS Homepage loaded with Alpine.js and Lucide icons - Interactive elements ready');
+            
+            // Example of integrating with Laravel CSRF token
+            // window.csrf_token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+            // Example of Alpine.js store for global state (uncomment if needed)
+            // Alpine.store('auth', {
+            //     user: null,
+            //     isAuthenticated: false
+            // });
+        });
+        
+        // Listen for Alpine.js initialization
+        document.addEventListener('alpine:init', () => {
+            console.log('Alpine.js initialized');
+        });
+        
+        document.addEventListener('alpine:initialized', () => {
+            console.log('Alpine.js fully initialized');
+            // Re-initialize Lucide icons to ensure they work with Alpine components
+            setTimeout(() => {
+                lucide.createIcons();
+                console.log('Lucide icons re-initialized after Alpine.js');
+            }, 50);
+        });
+        
+        // Alpine.js global functions (if needed)
+        window.alpineHelpers = {
+            formatDate: (date) => new Date(date).toLocaleDateString('nl-NL'),
+            formatPrice: (price) => new Intl.NumberFormat('nl-NL', { 
+                style: 'currency', 
+                currency: 'EUR' 
+            }).format(price)
+        };
+        
+        // Timezone component function
+        window.timezoneComponent = () => ({
+            currentTime: '',
+            currentOffset: '',
+            selectedTimezone: localStorage.getItem('pitts_timezone') || 'Europe/Brussels',
+            dropdownOpen: false,
+            timezones: [
+                { value: 'Pacific/Midway', label: 'Midway Island', offset: 'UTC-11' },
+                { value: 'Pacific/Honolulu', label: 'Hawaii', offset: 'UTC-10' },
+                { value: 'America/Anchorage', label: 'Alaska', offset: 'UTC-9' },
+                { value: 'America/Los_Angeles', label: 'Pacific Time (US)', offset: 'UTC-8' },
+                { value: 'America/Denver', label: 'Mountain Time (US)', offset: 'UTC-7' },
+                { value: 'America/Chicago', label: 'Central Time (US)', offset: 'UTC-6' },
+                { value: 'America/New_York', label: 'Eastern Time (US)', offset: 'UTC-5' },
+                { value: 'America/Caracas', label: 'Venezuela', offset: 'UTC-4' },
+                { value: 'America/Sao_Paulo', label: 'Brazil', offset: 'UTC-3' },
+                { value: 'Atlantic/South_Georgia', label: 'South Georgia', offset: 'UTC-2' },
+                { value: 'Atlantic/Azores', label: 'Azores', offset: 'UTC-1' },
+                { value: 'UTC', label: 'UTC / GMT', offset: 'UTC+0' },
+                { value: 'Europe/London', label: 'Verenigd Koninkrijk', offset: 'UTC+0' },
+                { value: 'Europe/Brussels', label: 'België/Nederland', offset: 'UTC+1' },
+                { value: 'Europe/Paris', label: 'Frankrijk/Duitsland', offset: 'UTC+1' },
+                { value: 'Europe/Athens', label: 'Griekenland/Finland', offset: 'UTC+2' },
+                { value: 'Europe/Moscow', label: 'Rusland (Moskou)', offset: 'UTC+3' },
+                { value: 'Asia/Dubai', label: 'VAE/Oman', offset: 'UTC+4' },
+                { value: 'Asia/Karachi', label: 'Pakistan', offset: 'UTC+5' },
+                { value: 'Asia/Dhaka', label: 'Bangladesh', offset: 'UTC+6' },
+                { value: 'Asia/Bangkok', label: 'Thailand/Vietnam', offset: 'UTC+7' },
+                { value: 'Asia/Shanghai', label: 'China', offset: 'UTC+8' },
+                { value: 'Asia/Tokyo', label: 'Japan/Korea', offset: 'UTC+9' },
+                { value: 'Australia/Sydney', label: 'Australië (Oost)', offset: 'UTC+10' },
+                { value: 'Pacific/Noumea', label: 'Nieuw-Caledonië', offset: 'UTC+11' },
+                { value: 'Pacific/Auckland', label: 'Nieuw-Zeeland', offset: 'UTC+12' }
+            ],
+            
+            init() {
+                console.log('Timezone component initializing...');
+                this.updateTime();
+                setInterval(() => this.updateTime(), 1000);
+                console.log('Timezone component ready with', this.timezones.length, 'timezones');
+            },
+            
+            updateTime() {
+                try {
+                    const now = new Date();
+                    this.currentTime = now.toLocaleTimeString('nl-BE', {
+                        timeZone: this.selectedTimezone,
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    });
+                    
+                    // Get the offset from the timezones array
+                    const tz = this.timezones.find(t => t.value === this.selectedTimezone);
+                    this.currentOffset = tz ? tz.offset : 'UTC+1';
+                } catch (error) {
+                    console.error('Error updating time:', error);
+                    // Simple fallback
+                    const now = new Date();
+                    this.currentTime = now.toLocaleTimeString('nl-BE', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    });
+                    this.currentOffset = 'UTC+1';
+                }
+            },
+            
+            changeTimezone(timezone) {
+                this.selectedTimezone = timezone;
+                localStorage.setItem('pitts_timezone', timezone);
+                this.updateTime();
+                this.dropdownOpen = false;
+            },
+            
+            getSelectedTimezoneInfo() {
+                const tz = this.timezones.find(t => t.value === this.selectedTimezone);
+                return tz || { label: this.selectedTimezone, offset: this.currentOffset };
+            }
+        });
+    </script>
+</body>
+</html> 

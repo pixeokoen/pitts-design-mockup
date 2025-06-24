@@ -1,0 +1,15 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Load and read these reference documents first:
+   - [static-mockup-manifest.md](mdc:_docs/static-mockup-manifest.md)
+   - [styling-guidelines.md](mdc:_docs/styling-guidelines.md)
+
+Confirm in chat by stating: "📖 References loaded" then continue your response on a new line below
+
+Follow the methodology, approach, and standards defined in those documents
+
+
+Context: This is a pigeon news and auction website project with Dutch content, but multi-lingual
