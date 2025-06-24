@@ -41,7 +41,7 @@
                         }
                     },
                     maxWidth: {
-                        'container': '1200px',
+                        'container': '1400px',
                     }
                 }
             }
@@ -719,25 +719,32 @@
                                      x-transition:leave-start="opacity-100"
                                      x-transition:leave-end="opacity-0"
                                      class="absolute inset-0 bg-cover bg-center"
-                                     :style="`background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url(${item.image})`">
+                                     :style="`background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.8)), url(${item.image})`">
                                 </div>
                             </template>
                             
                             <!-- Content Overlay -->
-                            <div class="absolute inset-0 flex flex-col justify-end p-6 lg:p-8 text-white">
-                                <div class="mb-4">
-                                    <span x-text="newsItems[currentIndex]?.category" 
-                                          class="inline-block bg-primary-blue-light px-3 py-1 rounded-full text-xs font-medium mb-3"></span>
+                            <a href="#" class="absolute inset-0 text-white cursor-pointer group">
+                                <!-- Content positioned absolutely at bottom -->
+                                <div class="absolute bottom-0 left-6 right-32 lg:left-8 lg:right-32 pb-8">
                                     <h2 x-text="newsItems[currentIndex]?.title" 
                                         class="text-2xl lg:text-3xl font-bold mb-3 leading-tight"></h2>
-                                    <p x-text="newsItems[currentIndex]?.excerpt" 
-                                       class="text-gray-200 mb-4 line-clamp-2"></p>
-                                    <button class="bg-white text-primary-blue-dark px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors flex items-center">
-                                        Lees meer
-                                        <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-                                    </button>
+                                    <p x-text="newsItems[currentIndex]?.fullExcerpt" 
+                                       class="text-gray-100 mb-0 line-clamp-3 text-sm leading-relaxed"></p>
                                 </div>
-                            </div>
+                                
+                                <!-- Hover Read More Button -->
+                                <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
+                                    <div class="bg-white text-primary-blue-dark px-3 py-2 rounded-lg text-xs font-medium shadow-lg flex items-center">
+                                        Lees meer
+                                        <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+                                    </div>
+                                </div>
+                            </a>
+                            
+                            <!-- Subtle hover effect overlay -->
+                            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                                 style="box-shadow: inset 0 0 60px rgba(0,0,0,0.3);"></div>
                             
                             <!-- Progress Bar -->
                             <div class="absolute bottom-0 left-0 right-0 h-1 bg-black bg-opacity-30">
@@ -779,12 +786,20 @@
                                               :data-news-item="index">
                                              
                                              <!-- Content -->
-                                             <h4 x-text="item.title" 
-                                                 :class="{ 
+                                             <h4 :class="{ 
                                                      'text-white font-medium': currentIndex === index,
                                                      'text-gray-800 dark:text-gray-200 hover:text-primary-blue-dark dark:hover:text-primary-blue-light': currentIndex !== index 
                                                  }"
-                                                 class="text-sm leading-snug line-clamp-2 transition-colors duration-200"></h4>
+                                                 class="text-sm leading-snug line-clamp-2 transition-colors duration-200">
+                                                 <span x-text="item.title"></span>
+                                                 <span :class="{ 
+                                                           'text-white/70': currentIndex === index,
+                                                           'text-gray-400 dark:text-gray-500': currentIndex !== index 
+                                                       }"
+                                                       class="text-xs font-normal ml-2">
+                                                     — <span x-text="item.timeAgo"></span>
+                                                 </span>
+                                             </h4>
                                              
                                              <!-- Bottom border for inactive items -->
                                              <div x-show="currentIndex !== index" 
@@ -799,122 +814,313 @@
             </div>
         </section>
 
-        <!-- Content Grid -->
-        <div class="grid md:grid-cols-3 gap-8">
-            <!-- Latest News -->
-            <div class="md:col-span-2">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-primary-blue-dark dark:text-white">Laatste Nieuws</h2>
-                    <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Alle nieuws →</a>
+        <!-- 4-Column Content System -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Column 1 -->
+            <div class="space-y-6">
+                <!-- News Card (Medium Attention) -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg border-l-4 border-primary-blue-light transition-colors duration-300">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-primary-blue-dark dark:text-white flex items-center justify-between">
+                            <span class="flex items-center">
+                                <i data-lucide="newspaper" class="w-5 h-5 mr-2"></i>
+                                Laatste Nieuws
+                            </span>
+                            <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Meer →</a>
+                        </h2>
+                    </div>
+                    <div class="p-4 space-y-4">
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="relative h-32 rounded mb-2 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1518467166778-b88f373ffec7?w=400&h=200&fit=crop&crop=center" 
+                                     alt="Racing pigeons" 
+                                     class="w-full h-full object-cover"
+                                     loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 right-2">
+                                    <h3 class="text-sm font-semibold text-white mb-1">Recordbrekende prestatie tijdens nationale kampioenschappen</h3>
+                                    <span class="text-white/80 text-xs">2 uur geleden</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-xs">Een bijzondere prestatie werd deze week geleverd tijdens de nationale wedstrijd...</p>
+                        </article>
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="relative h-32 rounded mb-2 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=400&h=200&fit=crop&crop=center" 
+                                     alt="Pigeon training" 
+                                     class="w-full h-full object-cover"
+                                     loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 right-2">
+                                    <h3 class="text-sm font-semibold text-white mb-1">Nieuwe trainingsmethoden tonen veelbelovende resultaten</h3>
+                                    <span class="text-white/80 text-xs">4 uur geleden</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-xs">Innovatieve trainingstechnieken zorgen voor betere prestaties...</p>
+                        </article>
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="relative h-32 rounded mb-2 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=200&fit=crop&crop=center" 
+                                     alt="International pigeon cooperation" 
+                                     class="w-full h-full object-cover"
+                                     loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 right-2">
+                                    <h3 class="text-sm font-semibold text-white mb-1">Internationale samenwerking brengt nieuwe mogelijkheden</h3>
+                                    <span class="text-white/80 text-xs">1 dag geleden</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-xs">Duivenverenigingen uit verschillende landen werken samen...</p>
+                        </article>
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="relative h-32 rounded mb-2 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&h=200&fit=crop&crop=center" 
+                                     alt="Veterinary care for pigeons" 
+                                     class="w-full h-full object-cover"
+                                     loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 right-2">
+                                    <h3 class="text-sm font-semibold text-white mb-1">Veterinaire doorbraak verbetert duivengezondheid</h3>
+                                    <span class="text-white/80 text-xs">2 dagen geleden</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-xs">Nieuwe ontwikkelingen in de veterinaire zorg...</p>
+                        </article>
+                        <article>
+                            <div class="relative h-32 rounded mb-2 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=200&fit=crop&crop=center" 
+                                     alt="Young pigeon racers" 
+                                     class="w-full h-full object-cover"
+                                     loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <div class="absolute bottom-2 left-2 right-2">
+                                    <h3 class="text-sm font-semibold text-white mb-1">Jeugdcompetitie toont indrukwekkende resultaten</h3>
+                                    <span class="text-white/80 text-xs">3 dagen geleden</span>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-xs">De nieuwe generatie duivenmelkers presteert uitstekend...</p>
+                        </article>
+                    </div>
                 </div>
-                
-                <div class="space-y-6">
-                    <!-- News Item 1 -->
-                    <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-colors duration-300">
-                        <div class="md:flex">
-                            <div class="md:w-1/3">
-                                <div class="h-48 md:h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                                    <i data-lucide="image" class="w-8 h-8 text-gray-400"></i>
-                                </div>
-                            </div>
-                            <div class="md:w-2/3 p-6">
-                                <div class="flex items-center space-x-2 mb-2">
-                                    <span class="bg-primary-blue-light text-white px-2 py-1 rounded-full text-xs">Kampioenschappen</span>
-                                    <span class="text-gray-500 text-sm">2 uur geleden</span>
-                                </div>
-                                <h3 class="text-xl font-bold text-primary-blue-dark dark:text-white mb-2">Recordbrekende prestatie in nationale wedstrijd</h3>
-                                <p class="text-gray-600 dark:text-gray-300 mb-4">Een bijzondere prestatie werd deze week geleverd tijdens de nationale wedstrijd, waarbij meerdere records werden gebroken...</p>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center text-sm text-gray-500">
-                                        <i data-lucide="user" class="w-3 h-3 mr-1"></i>
-                                        <span>Jan Vermeulen</span>
-                                    </div>
-                                    <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Lees meer →</a>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
 
-                    <!-- News Item 2 -->
-                    <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-colors duration-300">
-                        <div class="md:flex">
-                            <div class="md:w-1/3">
-                                <div class="h-48 md:h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                                    <i data-lucide="image" class="w-8 h-8 text-gray-400"></i>
-                                </div>
+                <!-- Kampioenschappen Card (Low Attention) -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md transition-colors duration-300">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-primary-blue-dark dark:text-white flex items-center justify-between">
+                            <span class="flex items-center">
+                                <i data-lucide="medal" class="w-5 h-5 mr-2"></i>
+                                Kampioenschappen
+                            </span>
+                            <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Meer →</a>
+                        </h2>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-purple-500 text-white px-2 py-1 rounded-full text-xs">Europees</span>
+                                <span class="text-gray-500 text-xs">1 uur geleden</span>
                             </div>
-                            <div class="md:w-2/3 p-6">
-                                <div class="flex items-center space-x-2 mb-2">
-                                    <span class="bg-primary-blue-dark text-white px-2 py-1 rounded-full text-xs">Veilingen</span>
-                                    <span class="text-gray-500 text-sm">5 uur geleden</span>
-                                </div>
-                                <h3 class="text-xl font-bold text-primary-blue-dark dark:text-white mb-2">Topduiven bereiken recordprijzen</h3>
-                                <p class="text-gray-600 dark:text-gray-300 mb-4">De laatste veiling heeft opnieuw bewezen dat kwaliteitsduiven zeer gewild zijn, met prijzen die alle verwachtingen overtroffen...</p>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center text-sm text-gray-500">
-                                        <i data-lucide="user" class="w-3 h-3 mr-1"></i>
-                                        <span>Marie Dubois</span>
-                                    </div>
-                                    <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Lees meer →</a>
-                                </div>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Europees Kampioenschap 2024 resultaten</h3>
+                        </article>
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">Nationaal</span>
+                                <span class="text-gray-500 text-xs">6 uur geleden</span>
                             </div>
-                        </div>
-                    </article>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Nieuwe seizoensrecords gevestigd</h3>
+                        </article>
+                        <article>
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-indigo-500 text-white px-2 py-1 rounded-full text-xs">Regionaal</span>
+                                <span class="text-gray-500 text-xs">1 dag geleden</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Regionale kampioenen bekend</h3>
+                        </article>
+                    </div>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <div>
-                <!-- Active Auctions -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-300">
-                    <h3 class="text-lg font-bold text-primary-blue-dark dark:text-white mb-4">Actieve Veilingen</h3>
-                    <div class="space-y-4">
-                        <div class="border-l-4 border-primary-blue-light pl-4">
-                            <h4 class="font-medium text-primary-blue-dark dark:text-white">Topkweek Janssen</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Hoogste bod: €2,450</p>
-                            <p class="text-xs text-red-600">Eindigt over 2u 15m</p>
-                        </div>
-                        <div class="border-l-4 border-primary-blue-light pl-4">
-                            <h4 class="font-medium text-primary-blue-dark dark:text-white">Kampioensduif 2024</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Hoogste bod: €1,890</p>
-                            <p class="text-xs text-red-600">Eindigt over 5u 30m</p>
-                        </div>
-                        <div class="border-l-4 border-primary-blue-light pl-4">
-                            <h4 class="font-medium text-primary-blue-dark dark:text-white">Snelheidskampioen</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Hoogste bod: €3,200</p>
-                            <p class="text-xs text-red-600">Eindigt over 1d 3u</p>
-                        </div>
+            <!-- Column 2 -->
+            <div class="space-y-6">
+                <!-- Veilingen Card (High Attention) -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl border-2 border-purple-500 transition-colors duration-300" x-data="auctionComponent()">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 rounded-t-lg">
+                        <h2 class="text-lg font-bold text-primary-blue-dark dark:text-white flex items-center justify-between">
+                            <span class="flex items-center">
+                                <i data-lucide="gavel" class="w-5 h-5 mr-2"></i>
+                                Veilingen
+                                <span class="ml-2 bg-purple-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-pulse">HOT</span>
+                            </span>
+                            <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Meer →</a>
+                        </h2>
                     </div>
-                    <a href="#" class="block text-center mt-4 text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Alle veilingen →</a>
+                    <div class="p-4 space-y-4">
+                        <template x-for="(auction, index) in auctions" :key="auction.id">
+                            <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0 relative transition-all duration-500"
+                                     :class="{ 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-300 dark:border-yellow-600 rounded-lg p-3 -m-1': auction.highlighted }">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white" x-text="auction.title"></h3>
+                                    <span class="px-2 py-1 rounded-full text-xs font-bold"
+                                          :class="auction.ended ? 'bg-gray-500 text-white' : (auction.featured ? 'bg-purple-500 text-white' : 'bg-green-500 text-white')"
+                                          x-text="auction.ended ? 'Gesloten' : (auction.featured ? 'TOPVEILING' : 'Actief')"></span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <p class="text-lg font-bold transition-all duration-300"
+                                       :class="auction.highlighted ? 'text-green-700 dark:text-green-400 text-xl' : 'text-green-600'"
+                                       x-text="'€' + auction.currentBid.toLocaleString()"></p>
+                                    <span class="text-xs font-semibold"
+                                          :class="auction.ended ? 'text-gray-500' : (auction.timeLeft < 3600 ? 'text-red-600' : (auction.featured ? 'text-purple-600' : 'text-gray-500'))"
+                                          x-text="auction.ended ? '✓ Afgelopen' : ('⏰ ' + formatTime(auction.timeLeft))"></span>
+                                </div>
+                                <!-- Bid update animation overlay - centered at top -->
+                                <div x-show="auction.highlighted" 
+                                     x-transition:enter="transition ease-out duration-300"
+                                     x-transition:enter-start="opacity-0 scale-95"
+                                     x-transition:enter-end="opacity-100 scale-100"
+                                     x-transition:leave="transition ease-in duration-200"
+                                     x-transition:leave-start="opacity-100 scale-100"
+                                     x-transition:leave-end="opacity-0 scale-95"
+                                     class="absolute top-0 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-3 py-1 rounded-b-lg text-xs font-bold shadow-lg">
+                                    Nieuw bod!
+                                </div>
+                            </article>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="space-y-6">
+                <!-- Prestaties Card (Low Attention) -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md transition-colors duration-300">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-primary-blue-dark dark:text-white flex items-center justify-between">
+                            <span class="flex items-center">
+                                <i data-lucide="target" class="w-5 h-5 mr-2"></i>
+                                Prestaties
+                            </span>
+                            <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Meer →</a>
+                        </h2>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Nieuw</span>
+                                <span class="text-gray-500 text-xs">30 min geleden</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Snelheidsrecord gebroken in Barcelona</h3>
+                        </article>
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded-full text-xs">Top 10</span>
+                                <span class="text-gray-500 text-xs">2 uur geleden</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Uitstekende prestaties in Pau</h3>
+                        </article>
+                        <article>
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-purple-500 text-white px-2 py-1 rounded-full text-xs">Analyse</span>
+                                <span class="text-gray-500 text-xs">5 uur geleden</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Seizoensanalyse: Topvliegers 2024</h3>
+                        </article>
+                    </div>
                 </div>
 
-                <!-- Quick Stats -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-300">
-                    <h3 class="text-lg font-bold text-primary-blue-dark dark:text-white mb-4">Statistieken</h3>
+                <!-- Vraag & Aanbod Card (Low Attention) -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md transition-colors duration-300">
+                    <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <h2 class="text-lg font-bold text-primary-blue-dark dark:text-white flex items-center justify-between">
+                            <span class="flex items-center">
+                                <i data-lucide="handshake" class="w-5 h-5 mr-2"></i>
+                                Vraag & Aanbod
+                            </span>
+                            <a href="#" class="text-primary-blue-light hover:text-primary-blue-dark transition-colors text-sm font-medium">Meer →</a>
+                        </h2>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Aanbod</span>
+                                <span class="text-gray-500 text-xs">1 uur geleden</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Jonge duiven te koop - Topkwaliteit</h3>
+                        </article>
+                        <article class="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-orange-500 text-white px-2 py-1 rounded-full text-xs">Vraag</span>
+                                <span class="text-gray-500 text-xs">3 uur geleden</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Zoek ervaren fokduiven</h3>
+                        </article>
+                        <article>
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs">Aanbod</span>
+                                <span class="text-gray-500 text-xs">1 dag geleden</span>
+                            </div>
+                            <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white">Duivenhokken en accessoires</h3>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 4: Advertisement & Sponsored Links -->
+            <div class="space-y-6">
+                <div class="flex items-center mb-4">
+                    <h2 class="text-xl font-bold text-primary-blue-dark dark:text-white flex items-center">
+                        <i data-lucide="megaphone" class="w-5 h-5 mr-2"></i>
+                        Gesponsord
+                    </h2>
+                </div>
+                
+                <!-- Advertisement Blocks -->
+                <div class="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-lg p-6 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 h-48">
+                    <i data-lucide="image" class="w-12 h-12 text-gray-400 mx-auto mb-3"></i>
+                    <p class="text-gray-500 text-sm font-medium">Advertentie 300x250</p>
+                    <p class="text-gray-400 text-xs mt-1">Premium duivenvoer</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-lg p-4 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 h-32">
+                    <i data-lucide="image" class="w-8 h-8 text-gray-400 mx-auto mb-2"></i>
+                    <p class="text-gray-500 text-sm font-medium">Advertentie 300x150</p>
+                    <p class="text-gray-400 text-xs mt-1">Duivenhokken</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-lg p-8 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 h-64">
+                    <i data-lucide="image" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+                    <p class="text-gray-500 text-sm font-medium">Advertentie 300x300</p>
+                    <p class="text-gray-400 text-xs mt-1">Duivensport uitrusting</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-lg p-3 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 h-24">
+                    <i data-lucide="image" class="w-6 h-6 text-gray-400 mx-auto mb-1"></i>
+                    <p class="text-gray-500 text-xs font-medium">Banner 300x100</p>
+                    <p class="text-gray-400 text-xs">Veterinaire diensten</p>
+                </div>
+
+                <div class="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-lg p-5 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 h-40">
+                    <i data-lucide="image" class="w-10 h-10 text-gray-400 mx-auto mb-3"></i>
+                    <p class="text-gray-500 text-sm font-medium">Advertentie 300x200</p>
+                    <p class="text-gray-400 text-xs mt-1">Duivenvervoer</p>
+                </div>
+
+                <!-- Newsletter Signup -->
+                <div class="bg-gradient-to-br from-primary-blue-light to-primary-blue-dark text-white rounded-lg shadow-md p-6 transition-colors duration-300">
+                    <h3 class="text-lg font-bold mb-2 flex items-center">
+                        <i data-lucide="mail" class="w-4 h-4 mr-2"></i>
+                        Nieuwsbrief
+                    </h3>
+                    <p class="text-sm mb-4 opacity-90">Blijf op de hoogte van het laatste nieuws en veilingen</p>
                     <div class="space-y-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600 dark:text-gray-300">Actieve leden</span>
-                            <span class="font-bold text-primary-blue-dark dark:text-white">1,247</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600 dark:text-gray-300">Lopende veilingen</span>
-                            <span class="font-bold text-primary-blue-dark dark:text-white">23</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600 dark:text-gray-300">Deze maand verkocht</span>
-                            <span class="font-bold text-primary-blue-dark dark:text-white">156</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-600 dark:text-gray-300">Gemiddelde prijs</span>
-                            <span class="font-bold text-primary-blue-dark dark:text-white">€1,425</span>
-                        </div>
+                        <input type="email" placeholder="Uw e-mailadres" class="w-full px-3 py-2 rounded text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white">
+                        <button class="w-full bg-white text-primary-blue-dark px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors">Aanmelden</button>
                     </div>
                 </div>
 
                 <!-- Premium Features (only for premium users) -->
                 <div x-show="$store.demoSettings.userState === 'loggedInPremium'" 
                      x-transition
-                     class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900 dark:to-yellow-800 rounded-lg p-6 mb-6 border border-yellow-200 dark:border-yellow-700 transition-colors duration-300">
+                     class="bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900 dark:to-yellow-800 rounded-lg p-6 border border-yellow-200 dark:border-yellow-700 transition-colors duration-300">
                     <h3 class="text-lg font-bold text-yellow-800 dark:text-yellow-200 mb-4 flex items-center">
                         <i data-lucide="crown" class="w-5 h-5 mr-2"></i>
                         Premium Functies
@@ -938,7 +1144,7 @@
                 <!-- Upgrade CTA (only for logged in basic users) -->
                 <div x-show="$store.demoSettings.userState === 'loggedIn'" 
                      x-transition
-                     class="bg-gradient-to-br from-primary-blue-light to-primary-blue-dark rounded-lg p-6 mb-6 text-white">
+                     class="bg-gradient-to-br from-primary-blue-light to-primary-blue-dark rounded-lg p-6 text-white">
                     <h3 class="text-lg font-bold mb-2 flex items-center">
                         <i data-lucide="star" class="w-5 h-5 mr-2"></i>
                         Upgrade naar Premium
@@ -1286,6 +1492,7 @@
                     id: 1,
                     title: 'Recordbrekende prestatie tijdens nationale kampioenschappen zorgt voor sensatie in duivensport gemeenschap',
                     excerpt: 'Een bijzondere prestatie werd deze week geleverd tijdens de nationale wedstrijd, waarbij meerdere records werden gebroken door topduiven uit verschillende regio\'s.',
+                    fullExcerpt: 'Een bijzondere prestatie werd deze week geleverd tijdens de nationale wedstrijd, waarbij meerdere records werden gebroken door topduiven uit verschillende regio\'s. De wedstrijd, die plaatsvond onder ideale weersomstandigheden, trok deelnemers uit heel Europa. Meer dan 15.000 duiven namen deel aan deze prestigieuze competitie, waarbij de snelste duif een gemiddelde snelheid van 1.847 meter per minuut wist te behalen. Dit is de hoogste snelheid ooit gemeten tijdens een nationale wedstrijd in Nederland. De winnende duif, eigendom van fokker Jan Vermeulen uit Brabant, voltooide de 650 kilometer lange route in recordtijd.',
                     category: 'Kampioenschappen',
                     timeAgo: '2 uur geleden',
                     image: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=800&h=600&fit=crop&crop=center'
@@ -1294,6 +1501,7 @@
                     id: 2,
                     title: 'Topduiven bereiken recordprijzen bij internationale veiling',
                     excerpt: 'De laatste veiling heeft opnieuw bewezen dat kwaliteitsduiven zeer gewild zijn, met prijzen die alle verwachtingen overtroffen hebben.',
+                    fullExcerpt: 'De laatste internationale veiling heeft opnieuw bewezen dat kwaliteitsduiven zeer gewild zijn, met prijzen die alle verwachtingen overtroffen hebben. Het topstuk van de veiling, een kampioensduif uit de beroemde Janssen-lijn, werd verkocht voor een recordbedrag van €245.000. Deze prijs overtreft alle eerdere veilingresultaten in Europa. Meer dan 500 duiven gingen onder de hamer, met een totale omzet van €3.2 miljoen. Bieders uit China, Dubai en de Verenigde Staten toonden bijzondere interesse in de Nederlandse topduiven. De veiling werd online gehouden met deelnemers uit 45 landen.',
                     category: 'Veilingen',
                     timeAgo: '5 uur geleden',
                     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&crop=center'
@@ -1302,6 +1510,7 @@
                     id: 3,
                     title: 'Nieuwe seizoensresultaten overtreffen alle verwachtingen en breken meerdere records',
                     excerpt: 'Het huidige seizoen toont uitstekende resultaten met betere prestaties dan vorig jaar, dankzij verbeterde trainingsmethoden en weer omstandigheden.',
+                    fullExcerpt: 'Het huidige seizoen toont uitstekende resultaten met betere prestaties dan vorig jaar, dankzij verbeterde trainingsmethoden en gunstige weersomstandigheden. Statistieken tonen aan dat de gemiddelde vliegsnelheden 8% hoger liggen dan in 2023. Nederlandse duiven domineren de internationale ranglijsten, met 12 van de top 20 posities bezet door Nederlandse fokkers. De verbeterde prestaties worden toegeschreven aan nieuwe voedingsschema\'s, geavanceerde trainingsroutes en betere veterinaire zorg. Ook de investering in moderne duivenhokken met klimaatbeheersing heeft bijgedragen aan de uitzonderlijke resultaten dit seizoen.',
                     category: 'Prestaties',
                     timeAgo: '1 dag geleden',
                     image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop&crop=center'
@@ -1310,6 +1519,7 @@
                     id: 4,
                     title: 'Veterinaire doorbraak verbetert duivengezondheid aanzienlijk',
                     excerpt: 'Nieuwe ontwikkelingen in de veterinaire zorg zorgen voor betere gezondheid en prestaties van wedstrijdduiven in heel Europa.',
+                    fullExcerpt: 'Nieuwe ontwikkelingen in de veterinaire zorg zorgen voor betere gezondheid en prestaties van wedstrijdduiven in heel Europa. Een revolutionaire behandelingsmethode voor luchtweginfecties heeft de sterftecijfers onder wedstrijdduiven met 40% verminderd. Het nieuwe medicijn, ontwikkeld door Nederlandse onderzoekers in samenwerking met de Universiteit Utrecht, is nu beschikbaar voor alle geregistreerde duivenmelkers. Daarnaast zijn nieuwe voedingssupplementen geïntroduceerd die de weerstand verhogen en de hersteltijd na vluchten verkorten. Deze doorbraken hebben geleid tot gezondere duivenpopulaties en betere prestaties tijdens wedstrijden.',
                     category: 'Veterinair',
                     timeAgo: '2 dagen geleden',
                     image: 'https://images.unsplash.com/photo-1548767797-d8c844163c4c?w=800&h=600&fit=crop&crop=center'
@@ -1318,6 +1528,7 @@
                     id: 5,
                     title: 'Internationale samenwerking tussen verenigingen brengt nieuwe mogelijkheden voor de toekomst',
                     excerpt: 'Duivenverenigingen uit verschillende landen werken samen aan nieuwe initiatieven voor de toekomst van de duivensport.',
+                    fullExcerpt: 'Duivenverenigingen uit verschillende landen werken samen aan nieuwe initiatieven voor de toekomst van de duivensport. Het European Pigeon Racing Alliance heeft een ambitieus plan gelanceerd om de sport te moderniseren en toegankelijker te maken voor jonge mensen. Het programma omvat digitale trainingsplatforms, online wedstrijdregistratie en real-time tracking van duiven tijdens vluchten. Ook wordt er gewerkt aan een Europees uitwisselingsprogramma waarbij jonge duivenmelkers ervaring kunnen opdoen in andere landen. De samenwerking heeft al geleid tot gestandaardiseerde regels voor internationale wedstrijden en een gemeenschappelijke database voor prestaties.',
                     category: 'Verenigingsnieuws',
                     timeAgo: '3 dagen geleden',
                     image: 'https://images.unsplash.com/photo-1502780402662-acc01917738e?w=800&h=600&fit=crop&crop=center'
@@ -1326,6 +1537,7 @@
                     id: 6,
                     title: 'Jonge duivenmelkers behalen uitzonderlijke resultaten',
                     excerpt: 'De nieuwe generatie duivenmelkers toont indrukwekkende prestaties in regionale competities.',
+                    fullExcerpt: 'De nieuwe generatie duivenmelkers toont indrukwekkende prestaties in regionale competities en brengt frisse ideeën naar de traditionele sport. Jongeren tussen 16 en 25 jaar hebben dit seizoen 30% van alle regionale prijzen gewonnen, een significante stijging ten opzichte van vorig jaar. Hun succes wordt toegeschreven aan moderne trainingsbenaderingen, gebruik van technologie voor tracking en data-analyse, en een andere kijk op duivenverzorging. Veel jonge melkers combineren traditionele wijsheid van ervaren mentors met innovatieve methoden zoals GPS-tracking en voedingsoptimalisatie via apps.',
                     category: 'Jeugd',
                     timeAgo: '4 dagen geleden',
                     image: 'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?w=800&h=600&fit=crop&crop=center'
@@ -1334,6 +1546,7 @@
                     id: 7,
                     title: 'Weersomstandigheden beïnvloeden vliegprestaties meer dan verwacht volgens nieuwe studie',
                     excerpt: 'Onderzoek toont aan dat specifieke weerspatronen een grote impact hebben op duivenprestaties.',
+                    fullExcerpt: 'Onderzoek toont aan dat specifieke weerspatronen een veel grotere impact hebben op duivenprestaties dan eerder gedacht. Een driejarige studie van de Wageningen Universiteit heeft aangetoond dat temperatuurschommelingen, luchtvochtigheid en windrichting cruciale factoren zijn voor vliegsucces. Duiven presteren 25% beter bij temperaturen tussen 18-22°C en een luchtvochtigheid van 60-70%. De studie heeft geleid tot nieuwe richtlijnen voor het plannen van wedstrijden en heeft fokkers geholpen om betere beslissingen te nemen over wanneer hun duiven in te zetten.',
                     category: 'Onderzoek',
                     timeAgo: '5 dagen geleden',
                     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=center'
@@ -1342,6 +1555,7 @@
                     id: 8,
                     title: 'Nieuwe trainingsmethoden revolutioneren duivensport',
                     excerpt: 'Innovatieve trainingstechnieken zorgen voor betere prestaties en gezondere duiven.',
+                    fullExcerpt: 'Innovatieve trainingstechnieken zorgen voor betere prestaties en gezondere duiven, waarbij technologie een steeds belangrijkere rol speelt. GPS-tracking systemen maken het mogelijk om vliegpatronen te analyseren en trainingsroutes te optimaliseren. Nieuwe voedingsregimes op basis van wetenschappelijk onderzoek hebben de conditie van duiven aanzienlijk verbeterd. Daarnaast worden virtual reality systemen gebruikt om duiven te laten wennen aan verschillende landschappen voordat ze daadwerkelijk vliegen. Deze moderne aanpak heeft geleid tot een gemiddelde prestatieverbetering van 15% bij deelnemende hokken.',
                     category: 'Training',
                     timeAgo: '6 dagen geleden',
                     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&crop=center'
@@ -1350,6 +1564,7 @@
                     id: 9,
                     title: 'Digitalisering transformeert administratie van duivenverenigingen wereldwijd',
                     excerpt: 'Moderne software en apps maken het beheer van duivenverenigingen efficiënter dan ooit.',
+                    fullExcerpt: 'Moderne software en apps maken het beheer van duivenverenigingen efficiënter dan ooit tevoren. Cloud-gebaseerde platforms hebben papierwerk grotendeels vervangen en maken real-time samenwerking mogelijk tussen verschillende hokken en verenigingen. Automatische ringregistratie, digitale stambomen en online wedstrijdregistratie hebben de administratieve last met 60% verminderd. Nieuwe apps bieden ook mogelijkheden voor livestreaming van wedstrijden, waardoor supporters wereldwijd kunnen volgen hoe hun favoriete duiven presteren. Deze digitale revolutie maakt de sport toegankelijker voor een nieuwe generatie.',
                     category: 'Technologie',
                     timeAgo: '1 week geleden',
                     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&crop=center'
@@ -1358,6 +1573,7 @@
                     id: 10,
                     title: 'Europees kampioenschap duivensport kondigt nieuwe regels aan',
                     excerpt: 'Belangrijke wijzigingen in de reglementen voor het aankomende Europese kampioenschap.',
+                    fullExcerpt: 'Belangrijke wijzigingen in de reglementen voor het aankomende Europese kampioenschap zijn aangekondigd na uitgebreide consultatie met nationale federaties. De nieuwe regels introduceren strengere controles op prestatiebevorderende middelen en vereisen verplichte GPS-tracking voor alle deelnemende duiven. Ook worden er nieuwe categorieën geïntroduceerd voor jonge duiven en wordt er een aparte competitie gehouden voor amateur-fokkers. Deze wijzigingen zijn bedoeld om de sport eerlijker te maken en meer kansen te bieden aan kleinere hokken om te concurreren met de grote commerciële operaties.',
                     category: 'Regelgeving',
                     timeAgo: '1 week geleden',
                     image: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=800&h=600&fit=crop&crop=center'
@@ -1366,6 +1582,7 @@
                     id: 11,
                     title: 'Duurzaamheidsinitiatieven in duivensport krijgen internationale erkenning',
                     excerpt: 'Milieuvriendelijke praktijken worden steeds belangrijker in de moderne duivensport.',
+                    fullExcerpt: 'Milieuvriendelijke praktijken worden steeds belangrijker in de moderne duivensport en krijgen nu internationale erkenning. Het Green Pigeon Initiative heeft certificeringsprogramma\'s gelanceerd voor duurzame duivenhokken, waarbij zonnepanelen, regenwateropvang en biologisch voer centraal staan. Meer dan 200 hokken in Europa hebben al het groene certificaat behaald. Ook wordt er gewerkt aan het verminderen van de ecologische voetafdruk van wedstrijden door gebruik van elektrische transportvoertuigen en lokale voerleveranciers. Deze initiatieven tonen aan dat sport en milieubewustzijn hand in hand kunnen gaan.',
                     category: 'Duurzaamheid',
                     timeAgo: '1 week geleden',
                     image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop&crop=center'
@@ -1374,6 +1591,7 @@
                     id: 12,
                     title: 'Genetisch onderzoek onthult nieuwe inzichten in duivenprestaties en erfelijkheid',
                     excerpt: 'Wetenschappelijke doorbraken helpen fokkers betere beslissingen te maken voor toekomstige generaties.',
+                    fullExcerpt: 'Wetenschappelijke doorbraken helpen fokkers betere beslissingen te maken voor toekomstige generaties door geavanceerd genetisch onderzoek. DNA-analyse kan nu voorspellen welke duiven de beste prestaties zullen leveren op basis van specifieke genetische markers. Onderzoekers hebben genen geïdentificeerd die verband houden met navigatievermogen, uithoudingsvermogen en snelheid. Deze informatie stelt fokkers in staat om gerichte kruisingen te maken en de kans op topduiven te vergroten. Het onderzoek heeft ook aangetoond dat genetische diversiteit cruciaal is voor de gezondheid van duivenpopulaties, wat heeft geleid tot nieuwe fokrichtlijnen.',
                     category: 'Wetenschap',
                     timeAgo: '2 weken geleden',
                     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&crop=center'
@@ -1537,6 +1755,182 @@
             getSelectedTimezoneInfo() {
                 const tz = this.timezones.find(t => t.value === this.selectedTimezone);
                 return tz || { label: this.selectedTimezone, offset: this.currentOffset };
+            }
+        });
+        
+        // Auction component function
+        window.auctionComponent = () => ({
+            auctions: [
+                {
+                    id: 1,
+                    title: 'Topkweek Janssen - Kampioenslijn',
+                    currentBid: 2450,
+                    timeLeft: 8100, // 2u 15m in seconds
+                    featured: true,
+                    highlighted: false
+                },
+                {
+                    id: 2,
+                    title: 'Kampioensduif 2024',
+                    currentBid: 1890,
+                    timeLeft: 19800, // 5u 30m in seconds
+                    featured: false,
+                    highlighted: false
+                },
+                {
+                    id: 3,
+                    title: 'Snelheidskampioen uit de beroemde Van den Berg fokkerij met bewezen prestaties over lange afstanden en uitstekende genetische lijn',
+                    currentBid: 3200,
+                    timeLeft: 97200, // 1d 3u in seconds
+                    featured: false,
+                    highlighted: false
+                },
+                {
+                    id: 4,
+                    title: 'Jonge duiven collectie 2024 - Topkwaliteit nakomelingen van Europees kampioen met internationale erkenning en certificering',
+                    currentBid: 1250,
+                    timeLeft: 216000, // 2d 12u in seconds
+                    featured: false,
+                    highlighted: false
+                },
+                {
+                    id: 5,
+                    title: 'Fokduiven - Bewezen lijn',
+                    currentBid: 875,
+                    timeLeft: 288000, // 3d 8u in seconds
+                    featured: false,
+                    highlighted: false
+                },
+                {
+                    id: 6,
+                    title: 'Internationale kampioen 2023',
+                    currentBid: 4100,
+                    timeLeft: 399600, // 4d 15u in seconds
+                    featured: false,
+                    highlighted: false
+                },
+                {
+                    id: 7,
+                    title: 'Lange afstand specialist met uitzonderlijke prestaties in Barcelona, Marseille en Perpignan wedstrijden - Directe nakomelingen van wereldkampioen',
+                    currentBid: 1650,
+                    timeLeft: 439200, // 5d 2u in seconds
+                    featured: false,
+                    highlighted: false
+                },
+                {
+                    id: 8,
+                    title: 'Snelheidsduif - Bewezen prestaties',
+                    currentBid: 2100,
+                    timeLeft: 554400, // 6d 10u in seconds
+                    featured: false,
+                    highlighted: false
+                },
+                {
+                    id: 9,
+                    title: 'Exclusieve fokset - 3 duiven',
+                    currentBid: 5500,
+                    timeLeft: 777600, // 1w 2d in seconds
+                    featured: false,
+                    highlighted: false
+                },
+                {
+                    id: 10,
+                    title: 'Veteraan kampioen - Afgelopen',
+                    currentBid: 3750,
+                    timeLeft: 0, // Ended
+                    featured: false,
+                    highlighted: false,
+                    ended: true
+                },
+                {
+                    id: 11,
+                    title: 'Jonge duif 2024 - Verkocht',
+                    currentBid: 1950,
+                    timeLeft: 0, // Ended
+                    featured: false,
+                    highlighted: false,
+                    ended: true
+                },
+                {
+                    id: 12,
+                    title: 'Fokpaar - Gesloten',
+                    currentBid: 2800,
+                    timeLeft: 0, // Ended
+                    featured: false,
+                    highlighted: false,
+                    ended: true
+                }
+            ],
+            countdownTimer: null,
+            bidUpdateTimer: null,
+            
+            init() {
+                this.startCountdown();
+                this.startBidUpdates();
+            },
+            
+            startCountdown() {
+                this.countdownTimer = setInterval(() => {
+                    this.auctions.forEach(auction => {
+                        if (auction.timeLeft > 0) {
+                            auction.timeLeft--;
+                        }
+                    });
+                }, 1000);
+            },
+            
+            startBidUpdates() {
+                // Random bid updates every 5-10 seconds for demo purposes
+                const scheduleNextUpdate = () => {
+                    const delay = Math.random() * 5000 + 5000; // 5-10 seconds
+                    this.bidUpdateTimer = setTimeout(() => {
+                        this.simulateBidUpdate();
+                        scheduleNextUpdate();
+                    }, delay);
+                };
+                scheduleNextUpdate();
+            },
+            
+            simulateBidUpdate() {
+                // Select a random auction that's not already highlighted
+                const availableAuctions = this.auctions.filter(a => !a.highlighted && a.timeLeft > 0);
+                if (availableAuctions.length === 0) return;
+                
+                const randomAuction = availableAuctions[Math.floor(Math.random() * availableAuctions.length)];
+                
+                // Increase bid by 50, 100, or 150 euros
+                const increments = [50, 100, 150];
+                const increment = increments[Math.floor(Math.random() * increments.length)];
+                randomAuction.currentBid += increment;
+                
+                // Highlight the auction
+                randomAuction.highlighted = true;
+                
+                // Remove highlight after 3 seconds
+                setTimeout(() => {
+                    randomAuction.highlighted = false;
+                }, 3000);
+            },
+            
+            formatTime(seconds) {
+                if (seconds <= 0) return 'Afgelopen';
+                
+                const days = Math.floor(seconds / 86400);
+                const hours = Math.floor((seconds % 86400) / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                
+                if (days > 0) {
+                    return `${days}d ${hours}u`;
+                } else if (hours > 0) {
+                    return `${hours}u ${minutes}m`;
+                } else {
+                    return `${minutes}m`;
+                }
+            },
+            
+            destroy() {
+                if (this.countdownTimer) clearInterval(this.countdownTimer);
+                if (this.bidUpdateTimer) clearTimeout(this.bidUpdateTimer);
             }
         });
     </script>
