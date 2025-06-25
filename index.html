@@ -1386,18 +1386,7 @@
                     <p class="text-gray-400 text-xs mt-1">Duivenvervoer</p>
                 </div>
 
-                <!-- Newsletter Signup -->
-                <div class="bg-gradient-to-br from-primary-blue-light to-primary-blue-dark text-white rounded-lg shadow-md p-6 transition-colors duration-300">
-                    <h3 class="text-lg font-bold mb-2 flex items-center">
-                        <i data-lucide="mail" class="w-4 h-4 mr-2"></i>
-                        Nieuwsbrief
-                    </h3>
-                    <p class="text-sm mb-4 opacity-90">Blijf op de hoogte van het laatste nieuws en veilingen</p>
-                    <div class="space-y-3">
-                        <input type="email" placeholder="Uw e-mailadres" class="w-full px-3 py-2 rounded text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white">
-                        <button class="w-full bg-white text-primary-blue-dark px-4 py-2 rounded text-sm font-medium hover:bg-gray-100 transition-colors">Aanmelden</button>
-                    </div>
-                </div>
+
 
                 <!-- Premium Features (only for premium users) -->
                 <div x-show="$store.demoSettings.userState === 'loggedInPremium'" 
@@ -1443,84 +1432,212 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-primary-blue-dark text-white mt-16">
-        <div class="max-w-container mx-auto px-4 py-16">
-            <div class="grid lg:grid-cols-6 md:grid-cols-3 gap-8">
-                <!-- Brand & About - Spans 2 columns -->
-                <div class="lg:col-span-2">
-                    <div class="mb-2">
+    <footer class="bg-primary-blue-dark text-white mt-16 relative overflow-hidden">
+        <!-- Subtle background pattern -->
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);"></div>
+        </div>
+        
+        <!-- Back to top button -->
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                class="absolute top-4 right-4 bg-primary-blue-light hover:bg-white hover:text-primary-blue-dark text-white p-2 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 z-10">
+            <i data-lucide="arrow-up" class="w-4 h-4 pointer-events-none"></i>
+        </button>
+        
+        <div class="max-w-container mx-auto px-4 py-16 relative">
+            <!-- Newsletter signup section -->
+            <div class="rounded-2xl p-8 mb-12 backdrop-blur-sm border border-white border-opacity-10" style="background-color: #1e2a4a;">
+                <div class="text-center max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-3 text-white">Blijf op de hoogte</h3>
+                    <p class="text-gray-300 mb-6">Ontvang het laatste nieuws over duivensport, veilingen en exclusieve aanbiedingen direct in uw inbox.</p>
+                    <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                        <input type="email" 
+                               placeholder="Uw email adres" 
+                               class="flex-1 px-4 py-3 rounded-lg bg-white bg-opacity-10 border border-white border-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-blue-light focus:border-transparent">
+                        <button class="bg-primary-blue-light hover:bg-white hover:text-primary-blue-dark text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap">
+                            Aanmelden
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid lg:grid-cols-5 md:grid-cols-2 gap-8">
+                <!-- Brand & About -->
+                <div>
+                    <div class="mb-4">
                         <img src="assets/images/logo/pitts-logo-landscape-white.svg" 
                              alt="PITTS - Pigeons Into The Sky" 
-                             class="h-24 w-auto"
+                             class="h-24 w-auto transition-transform duration-300 hover:scale-105"
                              onerror="this.src='assets/images/logo/pitts-logo-landscape-white.png'">
                     </div>
-                    <p class="text-gray-300 text-sm mb-4">Uw platform voor duivensport, veilingen en nieuws.</p>
+                    <p class="text-gray-300 text-base leading-relaxed">
+                        Het toonaangevende platform voor de duivensport gemeenschap. 
+                        Ontdek het laatste nieuws, exclusieve veilingen en verbind met 
+                        duivenliefhebbers wereldwijd.
+                    </p>
                 </div>
                 
                 <!-- Main Pages -->
-                <div>
-                    <h4 class="font-bold mb-4 text-white">Hoofdpagina's</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Home</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Nieuws</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Veilingen</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Bonverkopen</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Vraag & Aanbod</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Webshop</a></li>
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white text-lg border-b border-primary-blue-light border-opacity-30 pb-2">
+                        <i data-lucide="home" class="w-4 h-4 inline mr-2 text-primary-blue-light pointer-events-none"></i>
+                        Hoofdpagina's
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Home
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Nieuws
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Veilingen
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Bonverkopen
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Vraag & Aanbod
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Webshop
+                        </a></li>
                     </ul>
                 </div>
                 
                 <!-- Artikels & Content -->
-                <div>
-                    <h4 class="font-bold mb-4 text-white">Artikels</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Kampioenschappen</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Prestaties</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Veterinair</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Verenigingsnieuws</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Reportages</a></li>
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white text-lg border-b border-primary-blue-light border-opacity-30 pb-2">
+                        <i data-lucide="newspaper" class="w-4 h-4 inline mr-2 text-primary-blue-light pointer-events-none"></i>
+                        Artikels
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Kampioenschappen
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Prestaties
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Veterinair
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Verenigingsnieuws
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Reportages
+                        </a></li>
                     </ul>
                 </div>
                 
-                <!-- Platform Features -->
-                <div>
-                    <h4 class="font-bold mb-4 text-white">Platform</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Resultaten</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Kalender</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Lossingen</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Nieuwsbrief</a></li>
+                <!-- Platform Features & Service Combined -->
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white text-lg border-b border-primary-blue-light border-opacity-30 pb-2">
+                        <i data-lucide="settings" class="w-4 h-4 inline mr-2 text-primary-blue-light pointer-events-none"></i>
+                        Platform & Service
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Resultaten
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Kalender
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Lossingen
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Redactie
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Adverteren
+                        </a></li>
                     </ul>
                 </div>
                 
-                <!-- Service & Legal -->
-                <div>
-                    <h4 class="font-bold mb-4 text-white">Service</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Redactie</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Adverteren</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Solliciteren</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Privacy</a></li>
-                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors">Algemene voorwaarden</a></li>
+                <!-- Legal & Support -->
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white text-lg border-b border-primary-blue-light border-opacity-30 pb-2">
+                        <i data-lucide="shield-check" class="w-4 h-4 inline mr-2 text-primary-blue-light pointer-events-none"></i>
+                        Juridisch & Hulp
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Privacy beleid
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Algemene voorwaarden
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Solliciteren
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Help & Support
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>
+                            Contact
+                        </a></li>
                     </ul>
                 </div>
             </div>
             
-            <!-- Contact Bar -->
-            <div class="border-t border-gray-600 mt-12 pt-8">
-                <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                    <div class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 text-sm text-gray-300">
-                        <div class="flex items-center">
-                            <i data-lucide="mail" class="w-4 h-4 mr-2 pointer-events-none"></i>
-                            <a href="mailto:info@pitts.be" class="hover:text-primary-blue-light transition-colors">info@pitts.be</a>
+            <!-- Enhanced Contact Bar -->
+            <div class="border-t border-white border-opacity-20 mt-16 pt-8 bg-white bg-opacity-5 rounded-lg -mx-4 px-4 py-6 mt-12">
+                <div class="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
+                    <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
+                        <div class="text-center md:text-left">
+                            <div class="text-white font-semibold mb-1">Vragen of hulp nodig?</div>
+                            <div class="text-gray-300 text-sm">Ons team staat voor u klaar</div>
                         </div>
-                        <div class="flex items-center">
-                            <i data-lucide="phone" class="w-4 h-4 mr-2 pointer-events-none"></i>
-                            <a href="tel:+32123456789" class="hover:text-primary-blue-light transition-colors">+32 123 456 789</a>
+                        <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm">
+                            <a href="mailto:info@pitts.be" class="flex items-center text-gray-300 hover:text-white transition-colors group">
+                                <div class="bg-primary-blue-light group-hover:bg-white group-hover:text-primary-blue-dark p-2 rounded-lg mr-3 transition-colors">
+                                    <i data-lucide="mail" class="w-4 h-4 pointer-events-none"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Email ons</div>
+                                    <div class="text-xs">info@pitts.be</div>
+                                </div>
+                            </a>
+                            <a href="tel:+32123456789" class="flex items-center text-gray-300 hover:text-white transition-colors group">
+                                <div class="bg-primary-blue-light group-hover:bg-white group-hover:text-primary-blue-dark p-2 rounded-lg mr-3 transition-colors">
+                                    <i data-lucide="phone" class="w-4 h-4 pointer-events-none"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Bel ons</div>
+                                    <div class="text-xs">+32 123 456 789</div>
+                                </div>
+                            </a>
                         </div>
                     </div>
-                    <div class="text-sm text-gray-300">
-                        &copy; 2025 PITTS - Pigeons Into The Sky. Alle rechten voorbehouden.
+                    <div class="text-center lg:text-right">
+                        <div class="text-sm text-gray-300 mb-1">
+                            &copy; 2025 PITTS - Pigeons Into The Sky
+                        </div>
+                                                 <div class="text-xs text-gray-400 flex items-center justify-center lg:justify-end">
+                             Alle rechten voorbehouden • Made with <i data-lucide="heart" class="w-3 h-3 mx-1 text-red-400 pointer-events-none"></i> by Pixeo
+                         </div>
                     </div>
                 </div>
             </div>
