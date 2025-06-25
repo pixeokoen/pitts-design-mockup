@@ -271,7 +271,7 @@
             <div class="flex items-center space-x-4" x-data="timezoneComponent()" x-cloak>
                 <!-- Real-time Clock with Timezone Info -->
                 <div class="flex items-center">
-                    <i data-lucide="clock" class="w-4 h-4 inline mr-1"></i>
+                    <i data-lucide="clock" class="w-4 h-4 inline mr-1 pointer-events-none"></i>
                     <span x-text="currentTime" class="font-mono mr-2"></span>
                     
                     <!-- Timezone Selector -->
@@ -280,7 +280,7 @@
                                 class="text-white hover:text-gray-200 transition-colors flex items-center bg-white bg-opacity-10 px-2 py-1 rounded text-xs">
                             <span x-text="getSelectedTimezoneInfo().offset" class="font-mono mr-1"></span>
                             <span x-text="getSelectedTimezoneInfo().label.split(' ')[0]" class="mr-1"></span>
-                            <i data-lucide="chevron-down" class="w-3 h-3" :class="{ 'rotate-180': dropdownOpen }"></i>
+                            <i data-lucide="chevron-down" class="w-3 h-3 pointer-events-none" :class="{ 'rotate-180': dropdownOpen }"></i>
                         </button>
                         
                         <!-- Timezone Dropdown -->
@@ -313,10 +313,10 @@
                 <div class="flex items-center space-x-2" x-data="{ selectedLang: 'nl', open: false }">
                     <div class="relative">
                         <button @click="open = !open" class="bg-transparent text-white text-xs border-none focus:outline-none flex items-center">
-                            <i data-lucide="globe" class="w-3 h-3 mr-1"></i>
+                            <i data-lucide="globe" class="w-3 h-3 mr-1 pointer-events-none"></i>
                             <span class="mr-1">International</span>
                             <span x-text="selectedLang.toUpperCase()"></span>
-                            <i data-lucide="chevron-down" class="w-3 h-3 ml-1" :class="{ 'rotate-180': open }"></i>
+                            <i data-lucide="chevron-down" class="w-3 h-3 ml-1 pointer-events-none" :class="{ 'rotate-180': open }"></i>
                         </button>
                         <div x-show="open" @click.away="open = false" x-transition class="absolute top-full right-0 mt-1 bg-white text-gray-900 rounded shadow-lg py-1 text-xs min-w-[120px] z-50">
                             <button @click="selectedLang = 'nl'; open = false" class="flex items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors">
@@ -370,7 +370,7 @@
                                    x-model="searchQuery" 
                                    @input.debounce.300ms="console.log('Search:', searchQuery)"
                                    class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue-light w-64">
-                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                         </div>
                         
                         <!-- Notifications -->
@@ -379,7 +379,7 @@
                         <div class="relative" x-data="{ showNotifications: false }">
                             <button @click="showNotifications = !showNotifications" 
                                     class="text-gray-600 hover:text-primary-blue-light transition-colors relative">
-                                <i data-lucide="bell" class="w-5 h-5"></i>
+                                <i data-lucide="bell" class="w-5 h-5 pointer-events-none"></i>
                                 <span x-show="notificationCount > 0" 
                                       x-text="notificationCount" 
                                       class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"></span>
@@ -411,7 +411,7 @@
                             <template x-if="$store.demoSettings.userState === 'loggedOut'">
                                 <div class="flex items-center space-x-2">
                                     <div class="w-8 h-8 bg-primary-blue-light rounded-full flex items-center justify-center">
-                                        <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                                        <i data-lucide="user" class="w-4 h-4 text-white pointer-events-none"></i>
                                     </div>
                                     <div class="hidden lg:block">
                                         <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Inloggen</button>
@@ -427,13 +427,13 @@
                                     <div class="relative">
                                         <button @click="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2">
                                             <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                                <i data-lucide="user-check" class="w-4 h-4 text-white"></i>
+                                                <i data-lucide="user-check" class="w-4 h-4 text-white pointer-events-none"></i>
                                             </div>
                                             <div class="hidden lg:block text-left">
                                                 <div class="text-sm font-medium text-gray-800">Jan de Vries</div>
                                                 <div class="text-xs text-gray-500">Basis Lid</div>
                                             </div>
-                                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 hidden lg:block" :class="{ 'rotate-180': userMenuOpen }"></i>
+                                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 hidden lg:block pointer-events-none" :class="{ 'rotate-180': userMenuOpen }"></i>
                                         </button>
                                         
                                         <!-- User Menu Dropdown -->
@@ -443,20 +443,20 @@
                                              class="absolute top-full right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border z-50">
                                             <div class="py-2">
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                                    <i data-lucide="user" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                                     Mijn Profiel
                                                 </a>
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="heart" class="w-4 h-4 mr-2"></i>
+                                                    <i data-lucide="heart" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                                     Favorieten
                                                 </a>
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                                    <i data-lucide="settings" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                                     Instellingen
                                                 </a>
                                                 <hr class="my-1">
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+                                                    <i data-lucide="log-out" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                                     Uitloggen
                                                 </a>
                                             </div>
@@ -471,16 +471,16 @@
                                     <div class="relative">
                                         <button @click="userMenuOpen = !userMenuOpen" class="flex items-center space-x-2">
                                             <div class="w-8 h-8 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center border-2 border-yellow-300">
-                                                <i data-lucide="crown" class="w-4 h-4 text-white"></i>
+                                                <i data-lucide="crown" class="w-4 h-4 text-white pointer-events-none"></i>
                                             </div>
                                             <div class="hidden lg:block text-left">
                                                 <div class="text-sm font-medium text-gray-800 flex items-center">
                                                     Jan de Vries
-                                                    <i data-lucide="star" class="w-3 h-3 text-yellow-500 ml-1"></i>
+                                                    <i data-lucide="star" class="w-3 h-3 text-yellow-500 ml-1 pointer-events-none"></i>
                                                 </div>
                                                 <div class="text-xs text-yellow-600 font-medium">Premium Lid</div>
                                             </div>
-                                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 hidden lg:block" :class="{ 'rotate-180': userMenuOpen }"></i>
+                                            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400 hidden lg:block pointer-events-none" :class="{ 'rotate-180': userMenuOpen }"></i>
                                         </button>
                                         
                                         <!-- Premium User Menu Dropdown -->
@@ -491,29 +491,29 @@
                                             <div class="py-2">
                                                 <div class="px-4 py-2 bg-yellow-50 border-b">
                                                     <div class="flex items-center text-xs text-yellow-600 font-medium">
-                                                        <i data-lucide="crown" class="w-3 h-3 mr-1"></i>
+                                                        <i data-lucide="crown" class="w-3 h-3 mr-1 pointer-events-none"></i>
                                                         Premium Account
                                                     </div>
                                                 </div>
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                                    <i data-lucide="user" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                                     Mijn Profiel
                                                 </a>
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="heart" class="w-4 h-4 mr-2"></i>
+                                                    <i data-lucide="heart" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                                     Favorieten
                                                 </a>
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="star" class="w-4 h-4 mr-2 text-yellow-500"></i>
+                                                    <i data-lucide="star" class="w-4 h-4 mr-2 text-yellow-500 pointer-events-none"></i>
                                                     Premium Functies
                                                 </a>
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="settings" class="w-4 h-4 mr-2"></i>
+                                                    <i data-lucide="settings" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                                     Instellingen
                                                 </a>
                                                 <hr class="my-1">
                                                 <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                    <i data-lucide="log-out" class="w-4 h-4 mr-2"></i>
+                                                    <i data-lucide="log-out" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                                     Uitloggen
                                                 </a>
                                             </div>
@@ -528,8 +528,8 @@
                         <!-- Data: mobileMenuOpen -->
                         <button @click="mobileMenuOpen = !mobileMenuOpen" 
                                 class="lg:hidden text-gray-600 hover:text-primary-blue-light transition-colors">
-                            <i data-lucide="menu" class="w-5 h-5" x-show="!mobileMenuOpen"></i>
-                            <i data-lucide="x" class="w-5 h-5" x-show="mobileMenuOpen"></i>
+                            <i data-lucide="menu" class="w-5 h-5 pointer-events-none" x-show="!mobileMenuOpen"></i>
+                            <i data-lucide="x" class="w-5 h-5 pointer-events-none" x-show="mobileMenuOpen"></i>
                         </button>
                     </div>
 
@@ -548,7 +548,7 @@
                                 <button @click="articlesOpen = !articlesOpen" 
                                         @click.away="articlesOpen = false"
                                         class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium flex items-center">
-                                    Artikels <i data-lucide="chevron-down" class="w-3 h-3 ml-1" :class="{ 'rotate-180': articlesOpen }"></i>
+                                    Artikels <i data-lucide="chevron-down" class="w-3 h-3 ml-1 pointer-events-none" :class="{ 'rotate-180': articlesOpen }"></i>
                                 </button>
                                 <!-- Dropdown for Artikels -->
                                 <div x-show="articlesOpen" 
@@ -571,8 +571,8 @@
                                 <button @click="moreOpen = !moreOpen" 
                                         @click.away="moreOpen = false"
                                         class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium flex items-center">
-                                    <i data-lucide="menu" class="w-4 h-4 mr-1"></i>
-                                    Meer <i data-lucide="chevron-down" class="w-3 h-3 ml-1" :class="{ 'rotate-180': moreOpen }"></i>
+                                    <i data-lucide="menu" class="w-4 h-4 mr-1 pointer-events-none"></i>
+                                    Meer <i data-lucide="chevron-down" class="w-3 h-3 ml-1 pointer-events-none" :class="{ 'rotate-180': moreOpen }"></i>
                                 </button>
                                 <!-- Rich Dropdown for Meer -->
                                 <div x-show="moreOpen" 
@@ -581,16 +581,16 @@
                                     <div class="py-2">
                                         <!-- Section 1: Platform Features -->
                                         <div class="px-2">
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="trophy" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="trophy" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Resultaten
                                             </a>
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="calendar" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="calendar" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Kalender
                                             </a>
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="map-pin" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="map-pin" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Lossingen
                                             </a>
                                         </div>
@@ -600,8 +600,8 @@
                                         
                                         <!-- Section 2: Newsletter -->
                                         <div class="px-2">
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="mail" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="mail" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Nieuwsbrief
                                             </a>
                                         </div>
@@ -611,16 +611,16 @@
                                         
                                         <!-- Section 3: Business -->
                                         <div class="px-2">
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="edit" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="edit" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Redactie
                                             </a>
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="megaphone" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="megaphone" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Adverteren
                                             </a>
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="briefcase" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="briefcase" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Solliciteren
                                             </a>
                                         </div>
@@ -630,20 +630,20 @@
                                         
                                         <!-- Section 4: Legal -->
                                         <div class="px-2">
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="shield" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="shield" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Privacy
                                             </a>
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="cookie" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="cookie" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Cookies
                                             </a>
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="info" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="info" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Disclaimer
                                             </a>
-                                            <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
-                                                <i data-lucide="file-text" class="w-4 h-4 mr-3 text-primary-blue-light"></i>
+                                            <a href="#" class="group flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-primary-blue-light hover:text-white transition-colors rounded-md">
+                                                <i data-lucide="file-text" class="w-4 h-4 mr-3 text-primary-blue-light group-hover:text-white pointer-events-none transition-colors"></i>
                                                 Algemene voorwaarden
                                             </a>
                                         </div>
@@ -675,7 +675,7 @@
                     <input type="search" placeholder="Zoeken..." 
                            x-model="mobileSearchQuery"
                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue-light">
-                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                 </div>
             </div>
             
@@ -688,7 +688,7 @@
                         <button @click="mobileArticlesOpen = !mobileArticlesOpen" 
                                 class="flex items-center justify-between w-full py-2 text-gray-700 hover:text-primary-blue-light transition-colors">
                             <span>Artikels</span>
-                            <i data-lucide="chevron-down" class="w-3 h-3" :class="{ 'rotate-180': mobileArticlesOpen }"></i>
+                            <i data-lucide="chevron-down" class="w-3 h-3 pointer-events-none" :class="{ 'rotate-180': mobileArticlesOpen }"></i>
                         </button>
                         <div x-show="mobileArticlesOpen" x-transition class="pl-4 mt-2 space-y-1">
                             <a href="#" class="block py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">Kampioenschappen</a>
@@ -706,23 +706,23 @@
                         <button @click="mobileMoreOpen = !mobileMoreOpen" 
                                 class="flex items-center justify-between w-full py-2 text-gray-700 hover:text-primary-blue-light transition-colors">
                             <div class="flex items-center">
-                                <i data-lucide="menu" class="w-4 h-4 mr-2"></i>
+                                <i data-lucide="menu" class="w-4 h-4 mr-2 pointer-events-none"></i>
                                 <span>Meer</span>
                             </div>
-                            <i data-lucide="chevron-down" class="w-3 h-3" :class="{ 'rotate-180': mobileMoreOpen }"></i>
+                            <i data-lucide="chevron-down" class="w-3 h-3 pointer-events-none" :class="{ 'rotate-180': mobileMoreOpen }"></i>
                         </button>
                         <div x-show="mobileMoreOpen" x-transition class="pl-4 mt-2 space-y-1">
                             <!-- Platform Features -->
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="trophy" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="trophy" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Resultaten
                             </a>
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="calendar" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="calendar" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Kalender
                             </a>
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="map-pin" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="map-pin" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Lossingen
                             </a>
                             
@@ -730,8 +730,8 @@
                             <div class="border-t border-gray-300 my-2 ml-5"></div>
                             
                             <!-- Newsletter -->
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="mail" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="mail" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Nieuwsbrief
                             </a>
                             
@@ -739,16 +739,16 @@
                             <div class="border-t border-gray-300 my-2 ml-5"></div>
                             
                             <!-- Business -->
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="edit" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="edit" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Redactie
                             </a>
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="megaphone" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="megaphone" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Adverteren
                             </a>
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="briefcase" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="briefcase" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Solliciteren
                             </a>
                             
@@ -756,20 +756,20 @@
                             <div class="border-t border-gray-300 my-2 ml-5"></div>
                             
                             <!-- Legal -->
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="shield" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="shield" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Privacy
                             </a>
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="cookie" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="cookie" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Cookies
                             </a>
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="info" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="info" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Disclaimer
                             </a>
-                            <a href="#" class="flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
-                                <i data-lucide="file-text" class="w-3 h-3 mr-2 text-primary-blue-light"></i>
+                            <a href="#" class="group flex items-center py-1 text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                                <i data-lucide="file-text" class="w-3 h-3 mr-2 text-primary-blue-light group-hover:text-primary-blue-light pointer-events-none transition-colors"></i>
                                 Algemene voorwaarden
                             </a>
                         </div>
@@ -781,7 +781,7 @@
             <div class="mt-4 pt-4 border-t border-gray-200">
                 <div class="flex items-center space-x-3 mb-3">
                     <div class="w-10 h-10 bg-primary-blue-light rounded-full flex items-center justify-center">
-                        <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                        <i data-lucide="user" class="w-5 h-5 text-white pointer-events-none"></i>
                     </div>
                     <div>
                         <button class="block text-primary-blue-dark hover:text-primary-blue-light transition-colors font-medium">Inloggen</button>
@@ -818,17 +818,17 @@
     ">
         <div class="max-w-container mx-auto px-4 py-3 flex items-center">
             <span class="bg-white text-primary-blue-light px-3 py-1 text-sm font-bold mr-4 rounded flex items-center">
-                <i data-lucide="zap" class="w-3 h-3 mr-1"></i>
+                <i data-lucide="zap" class="w-3 h-3 mr-1 pointer-events-none"></i>
                 BREAKING
             </span>
             <div class="flex-1 overflow-hidden relative h-6">
                 <div class="absolute inset-0 flex items-center transition-all duration-500 ease-in-out"
                      :class="{ 'opacity-0 transform translate-y-2': isTransitioning, 'opacity-100 transform translate-y-0': !isTransitioning }">
                     <div class="text-sm flex items-center">
-                        <i data-lucide="trophy" class="w-4 h-4 mr-2" x-show="currentIndex === 0"></i>
-                        <i data-lucide="calendar" class="w-4 h-4 mr-2" x-show="currentIndex === 1"></i>
-                        <i data-lucide="award" class="w-4 h-4 mr-2" x-show="currentIndex === 2"></i>
-                        <i data-lucide="rocket" class="w-4 h-4 mr-2" x-show="currentIndex === 3"></i>
+                        <i data-lucide="trophy" class="w-4 h-4 mr-2 pointer-events-none" x-show="currentIndex === 0"></i>
+                        <i data-lucide="calendar" class="w-4 h-4 mr-2 pointer-events-none" x-show="currentIndex === 1"></i>
+                        <i data-lucide="award" class="w-4 h-4 mr-2 pointer-events-none" x-show="currentIndex === 2"></i>
+                        <i data-lucide="rocket" class="w-4 h-4 mr-2 pointer-events-none" x-show="currentIndex === 3"></i>
                         <span x-text="newsItems[currentIndex].text"></span>
                     </div>
                 </div>
@@ -841,7 +841,7 @@
                         isTransitioning = false;
                     }, 300);
                 " class="text-white hover:text-gray-200 transition-colors">
-                    <i data-lucide="chevron-left" class="w-3 h-3"></i>
+                    <i data-lucide="chevron-left" class="w-3 h-3 pointer-events-none"></i>
                 </button>
                 <button @click="
                     isTransitioning = true;
@@ -850,7 +850,7 @@
                         isTransitioning = false;
                     }, 300);
                 " class="text-white hover:text-gray-200 transition-colors">
-                    <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                    <i data-lucide="chevron-right" class="w-3 h-3 pointer-events-none"></i>
                 </button>
             </div>
         </div>
@@ -893,7 +893,7 @@
                                 <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out">
                                     <div class="bg-white text-primary-blue-dark px-3 py-2 rounded-lg text-xs font-medium shadow-lg flex items-center">
                                         Lees meer
-                                        <i data-lucide="arrow-right" class="w-3 h-3 ml-1"></i>
+                                        <i data-lucide="arrow-right" class="w-3 h-3 ml-1 pointer-events-none"></i>
                                     </div>
                                 </div>
                             </a>
@@ -1117,19 +1117,28 @@
                                      :id="'auction-' + auction.id"
                                      @click="window.open('#auction-' + auction.id, '_blank')"
                                      title="Bekijk veiling details">
-                                <div class="flex justify-between items-start mb-2">
-                                    <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white" x-text="auction.title"></h3>
-                                    <span class="px-2 py-1 rounded-full text-xs font-bold"
-                                          :class="auction.ended ? 'bg-gray-500 text-white' : (auction.featured ? 'bg-purple-500 text-white' : 'bg-green-500 text-white')"
-                                          x-text="auction.ended ? 'Gesloten' : (auction.featured ? 'TOPVEILING' : 'Actief')"></span>
-                                </div>
+                                <!-- Auction title at the top -->
+                                <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white mb-2" x-text="auction.title"></h3>
+                                
+                                <!-- Price on left, time/status on right -->
                                 <div class="flex justify-between items-center">
                                     <p class="text-lg font-bold text-green-600 transition-colors duration-300"
                                        x-text="'€' + auction.currentBid.toLocaleString()"
                                        :id="'bid-' + auction.id"></p>
-                                    <span class="text-xs font-semibold"
-                                          :class="auction.ended ? 'text-gray-500' : (auction.timeLeft < 3600 ? 'text-red-600' : (auction.featured ? 'text-purple-600' : 'text-gray-500'))"
-                                          x-text="auction.ended ? '✓ Afgelopen' : ('⏰ ' + formatTime(auction.timeLeft))"></span>
+                                    <!-- Finished auctions: plain text -->
+                                    <template x-if="auction.ended">
+                                        <span class="text-xs font-semibold text-gray-500 flex items-center">
+                                            <i data-lucide="check-circle" class="w-4 h-4 mr-1 pointer-events-none"></i>
+                                            Afgelopen
+                                        </span>
+                                    </template>
+                                    <!-- Active auctions: time in label -->
+                                    <template x-if="!auction.ended">
+                                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-semibold text-purple-600 dark:text-purple-400 flex items-center">
+                                            <i data-lucide="clock" class="w-3 h-3 mr-1 pointer-events-none"></i>
+                                            <span x-text="formatTime(auction.timeLeft)"></span>
+                                        </span>
+                                    </template>
                                 </div>
                                 <!-- Bid update animation overlay - centered at top -->
                                 <div x-show="auction.highlighted" 
@@ -1316,13 +1325,7 @@
                     </button>
                 </div>
 
-                <!-- Advertisement Space (only for logged out users) -->
-                <div x-show="$store.demoSettings.userState === 'loggedOut'" 
-                     x-transition
-                     class="bg-gray-100 dark:bg-gray-700 rounded-lg p-8 text-center transition-colors duration-300">
-                    <p class="text-gray-500 dark:text-gray-300 mb-2">Advertentie</p>
-                    <p class="text-xs text-gray-400 dark:text-gray-400">300 x 250</p>
-                </div>
+
             </div>
         </div>
     </main>
@@ -1371,9 +1374,9 @@
                         <p><i data-lucide="mail" class="w-4 h-4 inline mr-2"></i> info@pitts.be</p>
                         <p><i data-lucide="phone" class="w-4 h-4 inline mr-2"></i> +32 123 456 789</p>
                         <div class="flex space-x-3 mt-4">
-                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="facebook" class="w-4 h-4 pointer-events-none"></i></a>
+                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="instagram" class="w-4 h-4 pointer-events-none"></i></a>
+                            <a href="#" class="text-gray-300 hover:text-primary-blue-light transition-colors"><i data-lucide="youtube" class="w-4 h-4 pointer-events-none"></i></a>
                         </div>
                     </div>
                 </div>
@@ -1408,7 +1411,7 @@
             <!-- Panel Header -->
             <div class="flex items-center justify-between mb-4 pb-2 border-b dark:border-gray-700">
                 <h3 class="text-sm font-bold text-gray-800 dark:text-white flex items-center">
-                    <i data-lucide="monitor" class="w-4 h-4 mr-2"></i>
+                    <i data-lucide="monitor" class="w-4 h-4 mr-2 pointer-events-none"></i>
                     Demo Settings
                 </h3>
                 <button @click="$store.demoSettings && ($store.demoSettings.panelOpen = false)" 
@@ -1420,7 +1423,7 @@
             <!-- User State Section -->
             <div class="mb-4">
                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    <i data-lucide="user" class="w-3 h-3 inline mr-1"></i>
+                    <i data-lucide="user" class="w-3 h-3 inline mr-1 pointer-events-none"></i>
                     User State
                 </label>
                 <div class="space-y-2">
@@ -1451,7 +1454,7 @@
                                class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
                         <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
                             Logged In Premium
-                            <i data-lucide="crown" class="w-3 h-3 ml-1 text-yellow-500"></i>
+                            <i data-lucide="crown" class="w-3 h-3 ml-1 text-yellow-500 pointer-events-none"></i>
                         </span>
                     </label>
                 </div>
@@ -1460,7 +1463,7 @@
             <!-- Theme Mode Section -->
             <div class="mb-4">
                 <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    <i data-lucide="palette" class="w-3 h-3 inline mr-1"></i>
+                    <i data-lucide="palette" class="w-3 h-3 inline mr-1 pointer-events-none"></i>
                     Theme Mode
                 </label>
                 <div class="space-y-2">
@@ -1472,7 +1475,7 @@
                                :checked="$store.demoSettings && $store.demoSettings.themeMode === 'light'"
                                class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
                         <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
-                            <i data-lucide="sun" class="w-3 h-3 mr-1"></i>
+                            <i data-lucide="sun" class="w-3 h-3 mr-1 pointer-events-none"></i>
                             Light
                         </span>
                     </label>
@@ -1484,7 +1487,7 @@
                                :checked="$store.demoSettings && $store.demoSettings.themeMode === 'dark'"
                                class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
                         <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
-                            <i data-lucide="moon" class="w-3 h-3 mr-1"></i>
+                            <i data-lucide="moon" class="w-3 h-3 mr-1 pointer-events-none"></i>
                             Dark
                         </span>
                     </label>
@@ -1498,9 +1501,9 @@
                     <a href="design-docs/index.html" 
                        target="_blank" 
                        class="inline-flex items-center text-primary-blue-light hover:text-primary-blue-dark transition-colors text-xs">
-                        <i data-lucide="book-open" class="w-3 h-3 mr-1"></i>
+                        <i data-lucide="book-open" class="w-3 h-3 mr-1 pointer-events-none"></i>
                         Design Documentation
-                        <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
+                        <i data-lucide="external-link" class="w-3 h-3 ml-1 pointer-events-none"></i>
                     </a>
                 </div>
             </div>
