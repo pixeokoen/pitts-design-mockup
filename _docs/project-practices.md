@@ -85,13 +85,50 @@ This document outlines the key practices and guidelines for managing the PITTS (
 
 ---
 
+## 📚 Design System Documentation
+
+### **Rule #2: Maintain Documentation Consistency**
+**CRITICAL**: Any changes to imports, libraries, stylesheets, or components in the main mockup MUST be reflected in the design documentation site.
+
+### Documentation Synchronization Requirements
+1. **Technology Stack Changes**: If CDN links, library versions, or dependencies change in `index.html`, update `design-docs/index.html` accordingly
+2. **Component Updates**: When modifying components in the main mockup, update the corresponding documentation page with:
+   - Updated code examples
+   - New configuration options
+   - Changed behavior or styling
+3. **Style Changes**: CSS modifications, Tailwind config changes, or custom styles must be synced to documentation
+4. **New Components**: Every new component created in the mockup gets its own documentation page with:
+   - Live preview
+   - Copy-paste ready code
+   - Usage guidelines
+   - Configuration options
+
+### Documentation Structure
+- **Main Site**: `design-docs/index.html` - Professional documentation site
+- **Component Pages**: Individual documentation for each component
+- **Live Previews**: Working examples using the same tech stack
+- **Code Examples**: Copy-paste ready HTML and Alpine.js code
+- **Usage Guidelines**: Implementation instructions for dev team
+
+### Workflow for Component Changes
+1. Make changes to component in main mockup
+2. Test changes thoroughly
+3. Update corresponding documentation page
+4. Verify live preview works correctly
+5. Update code examples and usage notes
+6. Only then commit all changes together
+
+---
+
 ## 🎯 Project Goals
 
 ### Primary Objectives
 - Create professional mockup for PITTS platform
+- Build comprehensive design system documentation
 - Prepare codebase for Laravel/Alpine.js migration
 - Maintain brand consistency and user experience
 - Support Dutch pigeon racing community needs
+- Enable easy component reuse for dev team
 
 ### Quality Standards
 - Clean, maintainable code
@@ -99,6 +136,7 @@ This document outlines the key practices and guidelines for managing the PITTS (
 - Fast loading times
 - Accessibility compliance
 - Professional appearance
+- Complete documentation coverage
 
 ---
 
