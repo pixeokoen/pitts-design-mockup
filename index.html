@@ -1117,7 +1117,7 @@
                                      :id="'auction-' + auction.id"
                                      @click="window.open('#auction-' + auction.id, '_blank')"
                                      @mouseover="$el.style.borderRightColor='#4E8ABD'; if (!auction.highlighted) $el.style.backgroundColor='#F3F4F6'; $el.querySelector('h3').style.color='#4E8ABD';"
-                                     @mouseout="$el.style.borderRightColor='transparent'; if (!auction.highlighted) $el.style.backgroundColor='transparent'; $el.querySelector('h3').style.color='';"
+                                     @mouseout="$el.style.borderRightColor='transparent'; if (!auction.highlighted) { $el.style.backgroundColor='transparent'; } else { $el.style.backgroundColor=''; } $el.querySelector('h3').style.color='';"
                                      title="Bekijk veiling details">
                                 <!-- Auction title at the top -->
                                 <h3 class="text-sm font-semibold text-primary-blue-dark dark:text-white mb-2" x-text="auction.title"></h3>
