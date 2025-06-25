@@ -1386,23 +1386,23 @@
     </footer>
 
     <!-- Demo Settings Panel -->
-    <div class="fixed bottom-4 right-4 z-50" x-data="{}" x-init="$store.demoSettings.init()">
+    <div class="fixed bottom-4 right-4 z-50" x-data="{}" x-init="console.log('Settings panel initialized'); $store.demoSettings && $store.demoSettings.init()">
         <!-- Settings Toggle Button -->
-        <button @click="$store.demoSettings.togglePanel()" 
+        <button @click="console.log('Settings button clicked'); $store.demoSettings && $store.demoSettings.togglePanel()" 
                 class="bg-gray-800 hover:bg-gray-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 mb-2"
-                :class="{ 'rotate-45': $store.demoSettings.panelOpen }">
-            <i data-lucide="settings" class="w-5 h-5"></i>
+                :class="{ 'rotate-45': $store.demoSettings && $store.demoSettings.panelOpen }">
+            <i data-lucide="settings" class="w-5 h-5 pointer-events-none"></i>
         </button>
         
         <!-- Settings Panel -->
-        <div x-show="$store.demoSettings.panelOpen" 
+        <div x-show="$store.demoSettings && $store.demoSettings.panelOpen" 
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 transform translate-y-4 scale-95"
              x-transition:enter-end="opacity-100 transform translate-y-0 scale-100"
              x-transition:leave="transition ease-in duration-200"
              x-transition:leave-start="opacity-100 transform translate-y-0 scale-100"
              x-transition:leave-end="opacity-0 transform translate-y-4 scale-95"
-             @click.away="$store.demoSettings.panelOpen = false"
+             @click.away="$store.demoSettings && ($store.demoSettings.panelOpen = false)"
              class="bg-white dark:bg-gray-800 rounded-lg shadow-xl border dark:border-gray-700 p-4 w-64 mb-2">
             
             <!-- Panel Header -->
@@ -1411,9 +1411,9 @@
                     <i data-lucide="monitor" class="w-4 h-4 mr-2"></i>
                     Demo Settings
                 </h3>
-                <button @click="$store.demoSettings.panelOpen = false" 
+                <button @click="$store.demoSettings && ($store.demoSettings.panelOpen = false)" 
                         class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+                    <i data-lucide="x" class="w-4 h-4 pointer-events-none"></i>
                 </button>
             </div>
             
@@ -1428,8 +1428,8 @@
                         <input type="radio" 
                                name="userState" 
                                value="loggedOut"
-                               @change="$store.demoSettings.setUserState('loggedOut')"
-                               :checked="$store.demoSettings.userState === 'loggedOut'"
+                               @change="$store.demoSettings && $store.demoSettings.setUserState('loggedOut')"
+                               :checked="$store.demoSettings && $store.demoSettings.userState === 'loggedOut'"
                                class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
                         <span class="text-sm text-gray-700 dark:text-gray-300">Logged Out</span>
                     </label>
@@ -1437,8 +1437,8 @@
                         <input type="radio" 
                                name="userState" 
                                value="loggedIn"
-                               @change="$store.demoSettings.setUserState('loggedIn')"
-                               :checked="$store.demoSettings.userState === 'loggedIn'"
+                               @change="$store.demoSettings && $store.demoSettings.setUserState('loggedIn')"
+                               :checked="$store.demoSettings && $store.demoSettings.userState === 'loggedIn'"
                                class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
                         <span class="text-sm text-gray-700 dark:text-gray-300">Logged In</span>
                     </label>
@@ -1446,8 +1446,8 @@
                         <input type="radio" 
                                name="userState" 
                                value="loggedInPremium"
-                               @change="$store.demoSettings.setUserState('loggedInPremium')"
-                               :checked="$store.demoSettings.userState === 'loggedInPremium'"
+                               @change="$store.demoSettings && $store.demoSettings.setUserState('loggedInPremium')"
+                               :checked="$store.demoSettings && $store.demoSettings.userState === 'loggedInPremium'"
                                class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
                         <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
                             Logged In Premium
@@ -1468,8 +1468,8 @@
                         <input type="radio" 
                                name="themeMode" 
                                value="light"
-                               @change="$store.demoSettings.setThemeMode('light')"
-                               :checked="$store.demoSettings.themeMode === 'light'"
+                               @change="$store.demoSettings && $store.demoSettings.setThemeMode('light')"
+                               :checked="$store.demoSettings && $store.demoSettings.themeMode === 'light'"
                                class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
                         <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
                             <i data-lucide="sun" class="w-3 h-3 mr-1"></i>
@@ -1480,8 +1480,8 @@
                         <input type="radio" 
                                name="themeMode" 
                                value="dark"
-                               @change="$store.demoSettings.setThemeMode('dark')"
-                               :checked="$store.demoSettings.themeMode === 'dark'"
+                               @change="$store.demoSettings && $store.demoSettings.setThemeMode('dark')"
+                               :checked="$store.demoSettings && $store.demoSettings.themeMode === 'dark'"
                                class="mr-2 text-primary-blue-light focus:ring-primary-blue-light">
                         <span class="text-sm text-gray-700 dark:text-gray-300 flex items-center">
                             <i data-lucide="moon" class="w-3 h-3 mr-1"></i>
@@ -1492,8 +1492,17 @@
             </div>
             
             <!-- Panel Footer -->
-            <div class="text-xs text-gray-500 dark:text-gray-400 text-center pt-2 border-t dark:border-gray-700">
-                Demo Panel • Settings persist in localStorage
+            <div class="text-xs text-gray-500 dark:text-gray-400 pt-2 border-t dark:border-gray-700">
+                <div class="text-center mb-2">Demo Panel • Settings persist in localStorage</div>
+                <div class="text-center">
+                    <a href="design-docs/index.html" 
+                       target="_blank" 
+                       class="inline-flex items-center text-primary-blue-light hover:text-primary-blue-dark transition-colors text-xs">
+                        <i data-lucide="book-open" class="w-3 h-3 mr-1"></i>
+                        Design Documentation
+                        <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -1588,7 +1597,7 @@
             }
         };
         
-        // Demo Settings Store
+        // Demo Settings Store - Initialize immediately
         document.addEventListener('alpine:init', () => {
             Alpine.store('demoSettings', {
                 userState: localStorage.getItem('pitts_demo_userState') || 'loggedOut',
