@@ -390,10 +390,12 @@
     newsItems: [
         {
             id: <span class="highlight-string">1</span>,
-            title: <span class="highlight-string">'Your news title here'</span>,
-            excerpt: <span class="highlight-string">'Brief description of the news item'</span>,
-            image: <span class="highlight-string">'path/to/your/image.jpg'</span>,
-            timeAgo: <span class="highlight-string">'2 hours ago'</span>
+            title: <span class="highlight-string">'Recordbrekende prestatie tijdens nationale kampioenschappen'</span>,
+            excerpt: <span class="highlight-string">'Een bijzondere prestatie werd deze week geleverd...'</span>,
+            fullExcerpt: <span class="highlight-string">'Complete description for overlay display...'</span>,
+            category: <span class="highlight-string">'Kampioenschappen'</span>,
+            timeAgo: <span class="highlight-string">'2 uur geleden'</span>,
+            image: <span class="highlight-string">'path/to/your/image.jpg'</span>
         }
         <span class="highlight-comment">// Add more news items...</span>
     ],
@@ -473,7 +475,7 @@
                                                 <span class="text-green-600 dark:text-green-400">Required:</span> true
                                             </div>
                                             <div class="text-xs text-gray-500 dark:text-gray-400">
-                                                <strong>NewsItem properties:</strong> id, title, excerpt, image, timeAgo
+                                                <strong>NewsItem properties:</strong> id, title, excerpt, fullExcerpt, category, timeAgo, image
                                             </div>
                                         </div>
                                     </div>
@@ -594,7 +596,7 @@
             }
         }
 
-        // News Carousel component function - EXACT COPY FROM MOCKUP
+        // News Carousel component function - EXACT COPY FROM HOMEPAGE MOCKUP
         window.newsCarousel = () => ({
             currentIndex: 0,
             progress: 0,
@@ -610,7 +612,7 @@
                     fullExcerpt: 'Een bijzondere prestatie werd deze week geleverd tijdens de nationale wedstrijd, waarbij meerdere records werden gebroken door topduiven uit verschillende regio\'s. De wedstrijd, die plaatsvond onder ideale weersomstandigheden, trok deelnemers uit heel Europa. Meer dan 15.000 duiven namen deel aan deze prestigieuze competitie, waarbij de snelste duif een gemiddelde snelheid van 1.847 meter per minuut wist te behalen. Dit is de hoogste snelheid ooit gemeten tijdens een nationale wedstrijd in Nederland. De winnende duif, eigendom van fokker Jan Vermeulen uit Brabant, voltooide de 650 kilometer lange route in recordtijd.',
                     category: 'Kampioenschappen',
                     timeAgo: '2 uur geleden',
-                    image: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=800&h=600&fit=crop&crop=center'
+                    image: 'https://via.placeholder.com/800x600/4E8ABD/FFFFFF?text=Duivensport+Kampioenschap'
                 },
                 {
                     id: 2,
@@ -619,7 +621,7 @@
                     fullExcerpt: 'De laatste internationale veiling heeft opnieuw bewezen dat kwaliteitsduiven zeer gewild zijn, met prijzen die alle verwachtingen overtroffen hebben. Het topstuk van de veiling, een kampioensduif uit de beroemde Janssen-lijn, werd verkocht voor een recordbedrag van €245.000. Deze prijs overtreft alle eerdere veilingresultaten in Europa. Meer dan 500 duiven gingen onder de hamer, met een totale omzet van €3.2 miljoen. Bieders uit China, Dubai en de Verenigde Staten toonden bijzondere interesse in de Nederlandse topduiven. De veiling werd online gehouden met deelnemers uit 45 landen.',
                     category: 'Veilingen',
                     timeAgo: '5 uur geleden',
-                    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop&crop=center'
+                    image: 'https://via.placeholder.com/800x600/7BA7D1/FFFFFF?text=Duiven+Veiling'
                 },
                 {
                     id: 3,
@@ -628,7 +630,16 @@
                     fullExcerpt: 'Het huidige seizoen toont uitstekende resultaten met betere prestaties dan vorig jaar, dankzij verbeterde trainingsmethoden en gunstige weersomstandigheden. Statistieken tonen aan dat de gemiddelde vliegsnelheden 8% hoger liggen dan in 2023. Nederlandse duiven domineren de internationale ranglijsten, met 12 van de top 20 posities bezet door Nederlandse fokkers. De verbeterde prestaties worden toegeschreven aan nieuwe voedingsschema\'s, geavanceerde trainingsroutes en betere veterinaire zorg. Ook de investering in moderne duivenhokken met klimaatbeheersing heeft bijgedragen aan de uitzonderlijke resultaten dit seizoen.',
                     category: 'Prestaties',
                     timeAgo: '1 dag geleden',
-                    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop&crop=center'
+                    image: 'https://via.placeholder.com/800x600/273661/FFFFFF?text=Seizoen+Prestaties'
+                },
+                {
+                    id: 4,
+                    title: 'Veterinaire doorbraak verbetert duivengezondheid aanzienlijk',
+                    excerpt: 'Nieuwe ontwikkelingen in de veterinaire zorg zorgen voor betere gezondheid en prestaties van wedstrijdduiven in heel Europa.',
+                    fullExcerpt: 'Nieuwe ontwikkelingen in de veterinaire zorg zorgen voor betere gezondheid en prestaties van wedstrijdduiven in heel Europa. Een revolutionaire behandelingsmethode voor luchtweginfecties heeft de sterftecijfers onder wedstrijdduiven met 40% verminderd. Het nieuwe medicijn, ontwikkeld door Nederlandse onderzoekers in samenwerking met de Universiteit Utrecht, is nu beschikbaar voor alle geregistreerde duivenmelkers. Daarnaast zijn nieuwe voedingssupplementen geïntroduceerd die de weerstand verhogen en de hersteltijd na vluchten verkorten. Deze doorbraken hebben geleid tot gezondere duivenpopulaties en betere prestaties tijdens wedstrijden.',
+                    category: 'Veterinair',
+                    timeAgo: '2 dagen geleden',
+                    image: 'https://via.placeholder.com/800x600/4E8ABD/FFFFFF?text=Veterinaire+Zorg'
                 }
             ],
             
