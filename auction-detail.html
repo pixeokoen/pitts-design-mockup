@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veiling Details - PITTS - Pigeons Into The Sky</title>
+    
+    <!-- Favicon and Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="assets/icons/manifest.json">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#273661">
+    <meta name="msapplication-TileImage" content="assets/icons/ms-icon-144x144.png">
+    <meta name="msapplication-config" content="assets/icons/browserconfig.xml">
+    <meta name="theme-color" content="#4E8ABD">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': {
+                            'light': '#4E8ABD',
+                            'dark': '#273661',
+                        }
+                    },
+                    maxWidth: {
+                        'container': '1400px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(78, 138, 189, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(78, 138, 189, 0.6); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        /* Line clamp utility for text truncation */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 transition-colors duration-300" x-data="{ mobileMenuOpen: false }">
+    <!-- Top Bar with Language and Notifications -->
+    <div class="bg-primary-blue-dark text-white py-2">
+        <div class="max-w-container mx-auto px-4 flex justify-between items-center text-sm">
+            <div class="flex items-center space-x-4" x-data="timezoneComponent()" x-cloak>
+                <div class="flex items-center">
+                    <i data-lucide="clock" class="w-4 h-4 inline mr-1 pointer-events-none"></i>
+                    <span x-text="currentTime" class="font-mono mr-2"></span>
+                    <div class="relative">
+                        <button @click="dropdownOpen = !dropdownOpen" 
+                                class="text-white hover:text-gray-200 transition-colors flex items-center bg-white bg-opacity-10 px-2 py-1 rounded text-xs">
+                            <span x-text="getSelectedTimezoneInfo().offset" class="font-mono mr-1"></span>
+                            <span x-text="getSelectedTimezoneInfo().label.split(' ')[0]" class="mr-1"></span>
+                            <i data-lucide="chevron-down" class="w-3 h-3 pointer-events-none" :class="{ 'rotate-180': dropdownOpen }"></i>
+                        </button>
+                        <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition
+                             class="absolute top-full left-0 mt-1 bg-white text-gray-900 rounded shadow-lg py-1 text-xs min-w-[280px] z-50 max-h-80 overflow-y-auto">
+                            <div class="px-3 py-2 bg-gray-50 font-semibold text-gray-700 border-b">Selecteer Tijdzone</div>
+                            <div>
+                                <template x-for="timezone in timezones" :key="timezone.value">
+                                    <button @click="changeTimezone(timezone.value)" 
+                                            class="flex justify-between items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
+                                            :class="{ 'bg-primary-blue-light text-white hover:bg-primary-blue-dark': timezone.value === selectedTimezone }">
+                                        <span x-text="timezone.label"></span>
+                                        <span x-text="timezone.offset" class="font-mono text-gray-500" :class="{ 'text-gray-200': timezone.value === selectedTimezone }"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2" x-data="{ selectedLang: 'nl', open: false }">
+                    <div class="relative">
+                        <button @click="open = !open" class="bg-transparent text-white text-xs border-none focus:outline-none flex items-center">
+                            <i data-lucide="globe" class="w-3 h-3 mr-1 pointer-events-none"></i>
+                            <span class="mr-1">International</span>
+                            <span x-text="selectedLang.toUpperCase()"></span>
+                            <i data-lucide="chevron-down" class="w-3 h-3 ml-1 pointer-events-none" :class="{ 'rotate-180': open }"></i>
+                        </button>
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute top-full right-0 mt-1 bg-white text-gray-900 rounded shadow-lg py-1 text-xs min-w-[120px] z-50">
+                            <button @click="selectedLang = 'nl'; open = false" class="flex items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors">
+                                <span class="w-6 text-center mr-2">🇳🇱</span>Nederlands
+                            </button>
+                            <button @click="selectedLang = 'fr'; open = false" class="flex items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors">
+                                <span class="w-6 text-center mr-2">🇫🇷</span>Français
+                            </button>
+                            <button @click="selectedLang = 'en'; open = false" class="flex items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors">
+                                <span class="w-6 text-center mr-2">🇬🇧</span>English
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-300">
+        <div class="max-w-container mx-auto px-4">
+            <div class="flex items-center py-6 gap-8">
+                <div class="flex-shrink-0">
+                    <img src="assets/images/logo/pitts-logo-landscape.svg" 
+                         alt="PITTS - Pigeons Into The Sky" 
+                         class="h-24 w-auto"
+                         onerror="this.src='assets/images/logo/pitts-logo-landscape.png'">
+                </div>
+                <div class="hidden lg:block w-px h-20 bg-gray-200 dark:bg-gray-600"></div>
+                <div class="flex-1 flex flex-col justify-between min-h-[4rem]" x-data="{ searchQuery: '', notificationCount: 3 }">
+                    <div class="flex items-center justify-end space-x-4 mb-3">
+                        <div class="hidden md:block relative">
+                            <input type="search" placeholder="Zoeken..." x-model="searchQuery" 
+                                   class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue-light w-64">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                        </div>
+                        <div class="relative" x-data="{ showNotifications: false }">
+                            <button @click="showNotifications = !showNotifications" 
+                                    class="text-gray-600 hover:text-primary-blue-light transition-colors relative">
+                                <i data-lucide="bell" class="w-5 h-5 pointer-events-none"></i>
+                                <span x-show="notificationCount > 0" x-text="notificationCount" 
+                                      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"></span>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-primary-blue-light rounded-full flex items-center justify-center">
+                                <i data-lucide="user" class="w-4 h-4 text-white pointer-events-none"></i>
+                            </div>
+                            <div class="hidden lg:block">
+                                <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Inloggen</button>
+                                <span class="text-gray-400 mx-1">|</span>
+                                <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Account aanmaken</button>
+                            </div>
+                        </div>
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                                class="lg:hidden text-gray-600 hover:text-primary-blue-light transition-colors">
+                            <i data-lucide="menu" class="w-5 h-5 pointer-events-none" x-show="!mobileMenuOpen"></i>
+                            <i data-lucide="x" class="w-5 h-5 pointer-events-none" x-show="mobileMenuOpen"></i>
+                        </button>
+                    </div>
+                    <nav class="hidden lg:block" x-data="{ articlesOpen: false, moreOpen: false }">
+                        <ul class="flex items-center justify-end space-x-8">
+                            <li><a href="index.html" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Home</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Nieuws</a></li>
+                            <li class="relative">
+                                <button @click="articlesOpen = !articlesOpen" @click.away="articlesOpen = false"
+                                        class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium flex items-center">
+                                    Artikels <i data-lucide="chevron-down" class="w-3 h-3 ml-1 pointer-events-none" :class="{ 'rotate-180': articlesOpen }"></i>
+                                </button>
+                            </li>
+                            <li><a href="auctions.html" class="text-primary-blue-dark hover:text-primary-blue-light transition-colors font-medium border-b-2 border-primary-blue-light pb-1">Veilingen</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Bonverkopen</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Vraag & Aanbod</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Webshop</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <nav class="bg-gray-50 border-b">
+        <div class="max-w-container mx-auto px-4 py-3">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li><a href="index.html" class="text-gray-500 hover:text-primary-blue-light transition-colors">Home</a></li>
+                <li><i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 pointer-events-none"></i></li>
+                <li><a href="auctions.html" class="text-gray-500 hover:text-primary-blue-light transition-colors">Veilingen</a></li>
+                <li><i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 pointer-events-none"></i></li>
+                <li class="text-gray-900 font-medium">Veiling Details</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-container mx-auto px-4 py-8" x-data="auctionDetailPage()">
+        <div class="flex gap-8">
+            <!-- Left Sidebar - Auctions List -->
+            <aside class="w-80 flex-shrink-0">
+                <div class="bg-white rounded-lg shadow-lg sticky top-8">
+                    <div class="flex items-center p-4 border-b border-gray-200">
+                        <div class="bg-primary-blue-light p-2 rounded-lg mr-3">
+                            <i data-lucide="hammer" class="w-5 h-5 text-white pointer-events-none"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-900">Veilingen</h2>
+                    </div>
+                    
+                    <div>
+                        <template x-for="(auction, index) in auctions" :key="auction.id">
+                            <button @click="selectAuction(auction.id)" 
+                                    class="w-full text-left py-3 px-4 transition-colors border-b border-gray-200"
+                                    :class="[
+                                        selectedAuctionId === auction.id ? 'bg-primary-blue-light text-white' : 'hover:bg-gray-50',
+                                        index === auctions.length - 1 ? 'border-b-0' : ''
+                                    ]">
+                                <div class="font-medium text-sm" x-text="auction.title"></div>
+                            </button>
+                        </template>
+                    </div>
+                    
+                    <div class="p-4 border-t border-gray-200">
+                        <a href="auctions.html" 
+                           class="flex items-center text-sm text-gray-600 hover:text-primary-blue-light transition-colors">
+                            <i data-lucide="arrow-left" class="w-4 h-4 mr-2 pointer-events-none"></i>
+                            Terug naar overzicht
+                        </a>
+                    </div>
+                    
+                    <!-- Information Card -->
+                    <div class="p-4 bg-blue-50 border-t border-blue-200">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-2 rounded-full mr-3 flex-shrink-0">
+                                <i data-lucide="info" class="w-4 h-4 text-blue-600 pointer-events-none"></i>
+                            </div>
+                            <div class="text-sm text-blue-800">
+                                <div class="font-medium mb-1">Prijsinformatie</div>
+                                <div class="text-blue-700">Prijzen zijn exclusief 6% BTW en €5,00 administratiekost</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Right Content - Auction Items -->
+            <div class="flex-1">
+                <!-- Header -->
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2" x-text="selectedAuction?.title || 'Selecteer een veiling'"></h1>
+                    <p class="text-gray-600" x-text="selectedAuction ? selectedAuction.description : 'Kies een veiling uit de lijst om de items te bekijken'"></p>
+                </div>
+
+                <!-- Items Grid -->
+                <div x-show="selectedAuction" class="space-y-3">
+                    <template x-for="item in auctionItems" :key="item.id">
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200">
+                            <div class="p-4">
+                                <div class="flex gap-4">
+                                    <!-- Left: Pigeon Image -->
+                                    <div class="flex-shrink-0">
+                                        <!-- Pigeon Image - Full Card Height -->
+                                        <div class="w-40 h-40 bg-gray-200 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                                             @click="$dispatch('zoom-image', { src: 'assets/images/pigeons/default-pigeon.jpg', alt: item.name })">
+                                            <img src="assets/images/pigeons/default-pigeon.jpg" 
+                                                 alt="Pigeon thumbnail"
+                                                 class="w-full h-full object-cover"
+                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <div class="w-full h-full flex items-center justify-center" style="display: none;">
+                                                <i data-lucide="image" class="w-16 h-16 text-gray-400 pointer-events-none"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Middle: Main Content -->
+                                    <div class="flex-1 min-w-0">
+                                        <!-- Header Row -->
+                                        <div class="flex items-start justify-between mb-2">
+                                            <div class="flex-1">
+                                                <div class="flex items-center gap-2 mb-1">
+                                                    <span class="text-gray-400 text-xs font-medium" x-text="'Lot ' + item.lotNumber"></span>
+                                                    <!-- Favorite Star -->
+                                                    <button @click="item.isFavorite = !item.isFavorite" 
+                                                            class="p-1 rounded hover:bg-gray-100 transition-colors">
+                                                        <i data-lucide="star" 
+                                                           :class="item.isFavorite ? 'text-yellow-500 fill-current' : 'text-gray-400'"
+                                                           class="w-4 h-4 pointer-events-none"></i>
+                                                    </button>
+                                                </div>
+                                                <h3 class="text-lg font-semibold mb-1 leading-tight">
+                                                    <a href="auction-item-detail.html" class="text-primary-blue-light hover:text-primary-blue-dark underline transition-colors" x-text="item.fullName"></a>
+                                                </h3>
+                                                <p class="text-gray-600 text-sm line-clamp-2 mb-2" x-text="item.description"></p>
+                                                
+                                                <!-- Gender and Pedigree Buttons -->
+                                                <div class="flex items-center gap-2">
+                                                    <!-- Gender Button -->
+                                                    <div class="inline-flex items-center px-2 py-1 rounded text-sm font-medium border"
+                                                         :class="item.sex === 'male' ? 'bg-blue-50 border-blue-200' : 'bg-pink-50 border-pink-200'">
+                                                        <img :src="item.sex === 'male' ? 'assets/icons/ui/male.svg' : 'assets/icons/ui/female.svg'" 
+                                                             :alt="item.sex === 'male' ? 'Male' : 'Female'"
+                                                             class="w-4 h-4"
+                                                             :style="{ filter: item.sex === 'male' ? 'brightness(0) saturate(100%) invert(49%) sepia(78%) saturate(2476%) hue-rotate(204deg) brightness(95%) contrast(86%)' : 'brightness(0) saturate(100%) invert(54%) sepia(98%) saturate(1945%) hue-rotate(298deg) brightness(104%) contrast(94%)' }" />
+                                                    </div>
+                                                    
+                                                    <!-- Pedigree Button -->
+                                                    <button @click="$dispatch('zoom-pedigree', { src: item.pedigree, alt: 'Pedigree ' + item.name })"
+                                                            class="inline-flex items-center bg-primary-blue-light text-white rounded px-3 py-1 text-sm font-medium transition-colors hover:bg-primary-blue-dark">
+                                                        <img src="assets/icons/ui/pedigree.svg" alt="Pedigree" class="w-4 h-4 mr-2" 
+                                                             style="filter: brightness(0) invert(1);" />
+                                                        Pedigree
+                                                    </button>
+                                                    
+                                                    <!-- Video Button -->
+                                                    <button x-show="item.hasVideo" 
+                                                            @click="$dispatch('play-video', { url: item.videoUrl })"
+                                                            class="inline-flex items-center bg-red-700 text-white rounded px-3 py-1 text-sm font-medium transition-colors hover:bg-red-800">
+                                                        <i data-lucide="play" class="w-4 h-4 mr-2 pointer-events-none"></i>
+                                                        Video
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right: Auction Info Square -->
+                                    <div class="flex-shrink-0">
+                                        <div class="w-40 h-40 bg-gradient-to-b from-gray-50 to-gray-100 rounded-lg border-2 border-gray-200 flex flex-col text-purple-600"
+                                             style="box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);">
+                                            <!-- Top: Price & Bid History -->
+                                            <div class="h-24 flex flex-col justify-center items-center p-3 border-b border-gray-200">
+                                                <div class="text-3xl font-bold mb-1 text-purple-700" x-text="'€' + Math.floor(item.currentBid)"></div>
+                                                <button @click="$dispatch('show-bid-history', { itemId: item.id })"
+                                                        class="text-xs text-purple-600 hover:text-purple-700 transition-colors underline">
+                                                    <span x-text="'Biedgeschiedenis (' + item.bidCount + ')'"></span>
+                                                </button>
+                                            </div>
+                                            
+                                            <!-- Bottom: Countdown & End Time -->
+                                            <div class="h-16 flex flex-col justify-center items-center p-3 bg-gray-100 rounded-b-lg">
+                                                <div class="text-lg font-bold mb-1 text-purple-500" x-text="formatItemTimeLeftWithSeconds(item.endTime)"></div>
+                                                <div class="text-xs text-purple-400 text-center leading-tight" 
+                                                     x-text="new Date(item.endTime).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Empty State -->
+                <div x-show="!selectedAuction" class="text-center py-16">
+                    <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-4">
+                        <i data-lucide="search" class="w-12 h-12 text-gray-400 pointer-events-none"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Selecteer een veiling</h3>
+                    <p class="text-gray-600">Kies een veiling uit de lijst om de items te bekijken</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary-blue-dark text-white mt-16 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-5">
+            <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 0%, transparent 50%);"></div>
+        </div>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                class="absolute top-4 right-4 bg-primary-blue-light hover:bg-white hover:text-primary-blue-dark text-white p-2 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 z-10">
+            <i data-lucide="arrow-up" class="w-4 h-4 pointer-events-none"></i>
+        </button>
+        <div class="max-w-container mx-auto px-4 py-16 relative">
+            <div class="rounded-2xl p-8 mb-12 backdrop-blur-sm border border-white border-opacity-10" style="background-color: #1e2a4a;">
+                <div class="text-center max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-3 text-white">Blijf op de hoogte</h3>
+                    <p class="text-gray-300 mb-6">Ontvang het laatste nieuws over duivensport, veilingen en exclusieve aanbiedingen direct in uw inbox.</p>
+                    <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                        <input type="email" placeholder="Uw email adres" 
+                               class="flex-1 px-4 py-3 rounded-lg bg-white bg-opacity-10 border border-white border-opacity-20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-blue-light focus:border-transparent">
+                        <button class="bg-primary-blue-light hover:bg-white hover:text-primary-blue-dark text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 whitespace-nowrap">
+                            Aanmelden
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="grid lg:grid-cols-5 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="mb-4">
+                        <img src="assets/images/logo/pitts-logo-landscape-white.svg" 
+                             alt="PITTS - Pigeons Into The Sky" 
+                             class="h-24 w-auto transition-transform duration-300 hover:scale-105"
+                             onerror="this.src='assets/images/logo/pitts-logo-landscape-white.png'">
+                    </div>
+                    <p class="text-gray-300 text-base leading-relaxed">
+                        Het toonaangevende platform voor de duivensport gemeenschap. 
+                        Ontdek het laatste nieuws, exclusieve veilingen en verbind met 
+                        duivenliefhebbers wereldwijd.
+                    </p>
+                </div>
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white text-lg border-b border-primary-blue-light border-opacity-30 pb-2">
+                        <i data-lucide="home" class="w-4 h-4 inline mr-2 text-primary-blue-light pointer-events-none"></i>Hoofdpagina's
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="index.html" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Home
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Nieuws
+                        </a></li>
+                        <li><a href="auctions.html" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Veilingen
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Bonverkopen
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Vraag & Aanbod
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Webshop
+                        </a></li>
+                    </ul>
+                </div>
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white text-lg border-b border-primary-blue-light border-opacity-30 pb-2">
+                        <i data-lucide="newspaper" class="w-4 h-4 inline mr-2 text-primary-blue-light pointer-events-none"></i>Artikels
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Kampioenschappen
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Prestaties
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Veterinair
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Verenigingsnieuws
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Reportages
+                        </a></li>
+                    </ul>
+                </div>
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white text-lg border-b border-primary-blue-light border-opacity-30 pb-2">
+                        <i data-lucide="settings" class="w-4 h-4 inline mr-2 text-primary-blue-light pointer-events-none"></i>Platform & Service
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Resultaten
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Kalender
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Lossingen
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Redactie
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Adverteren
+                        </a></li>
+                    </ul>
+                </div>
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white text-lg border-b border-primary-blue-light border-opacity-30 pb-2">
+                        <i data-lucide="shield-check" class="w-4 h-4 inline mr-2 text-primary-blue-light pointer-events-none"></i>Juridisch & Hulp
+                    </h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Privacy beleid
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Algemene voorwaarden
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Solliciteren
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Help & Support
+                        </a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-primary-blue-light transition-all duration-300 flex items-center group">
+                            <i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-primary-blue-light opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></i>Contact
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white border-opacity-20 mt-16 pt-8 bg-white bg-opacity-5 rounded-lg -mx-4 px-4 py-6 mt-12">
+                <div class="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
+                    <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
+                        <div class="text-center md:text-left">
+                            <div class="text-white font-semibold mb-1">Vragen of hulp nodig?</div>
+                            <div class="text-gray-300 text-sm">Ons team staat voor u klaar</div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm">
+                            <a href="mailto:info@pitts.be" class="flex items-center text-gray-300 hover:text-white transition-colors group">
+                                <div class="bg-primary-blue-light group-hover:bg-white group-hover:text-primary-blue-dark p-2 rounded-lg mr-3 transition-colors">
+                                    <i data-lucide="mail" class="w-4 h-4 pointer-events-none"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Email ons</div>
+                                    <div class="text-xs">info@pitts.be</div>
+                                </div>
+                            </a>
+                            <a href="tel:+32123456789" class="flex items-center text-gray-300 hover:text-white transition-colors group">
+                                <div class="bg-primary-blue-light group-hover:bg-white group-hover:text-primary-blue-dark p-2 rounded-lg mr-3 transition-colors">
+                                    <i data-lucide="phone" class="w-4 h-4 pointer-events-none"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Bel ons</div>
+                                    <div class="text-xs">+32 123 456 789</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-center lg:text-right">
+                        <div class="text-sm text-gray-300 mb-1">&copy; 2025 PITTS - Pigeons Into The Sky</div>
+                        <div class="text-xs text-gray-400 flex items-center justify-center lg:justify-end">
+                             Alle rechten voorbehouden • Made with <i data-lucide="heart" class="w-3 h-3 mx-1 text-red-400 pointer-events-none"></i> by Pixeo
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Alpine.js timezone component
+        function timezoneComponent() {
+            return {
+                currentTime: '',
+                selectedTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                dropdownOpen: false,
+                timezones: [
+                    { value: 'Europe/Amsterdam', label: 'Amsterdam (Nederland)', offset: '+01:00' },
+                    { value: 'Europe/Brussels', label: 'Brussels (België)', offset: '+01:00' },
+                    { value: 'Europe/Paris', label: 'Paris (Frankrijk)', offset: '+01:00' },
+                    { value: 'Europe/Berlin', label: 'Berlin (Duitsland)', offset: '+01:00' },
+                    { value: 'Europe/London', label: 'London (Verenigd Koninkrijk)', offset: '+00:00' },
+                    { value: 'Europe/Rome', label: 'Rome (Italië)', offset: '+01:00' },
+                    { value: 'America/New_York', label: 'New York (Verenigde Staten)', offset: '-05:00' },
+                    { value: 'America/Chicago', label: 'Chicago (Verenigde Staten)', offset: '-06:00' },
+                    { value: 'America/Los_Angeles', label: 'Los Angeles (Verenigde Staten)', offset: '-08:00' },
+                    { value: 'Asia/Tokyo', label: 'Tokyo (Japan)', offset: '+09:00' },
+                    { value: 'Asia/Shanghai', label: 'Shanghai (China)', offset: '+08:00' },
+                    { value: 'Australia/Sydney', label: 'Sydney (Australië)', offset: '+11:00' }
+                ],
+                init() {
+                    this.updateTime();
+                    setInterval(() => { this.updateTime(); }, 1000);
+                },
+                updateTime() {
+                    const now = new Date();
+                    this.currentTime = now.toLocaleTimeString('nl-NL', {
+                        timeZone: this.selectedTimezone, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'
+                    });
+                },
+                changeTimezone(timezone) {
+                    this.selectedTimezone = timezone; this.dropdownOpen = false; this.updateTime();
+                },
+                getSelectedTimezoneInfo() {
+                    return this.timezones.find(tz => tz.value === this.selectedTimezone) || this.timezones[0];
+                }
+            }
+        }
+    </script>
+
+    <script>
+        // Alpine.js component for auction detail page
+        function auctionDetailPage() {
+            return {
+                selectedAuctionId: 1,
+                currentTime: Date.now(),
+                auctions: [
+                    {
+                        id: 1,
+                        title: 'Topkwekers Veiling - Snelheidsduiven',
+                        description: 'Exclusieve collectie racekampioenen van bekende Nederlandse kwekers. Bewezen genetische lijnen.',
+                        itemCount: 24
+                    },
+                    {
+                        id: 2,
+                        title: 'Internationale Kampioenen',
+                        description: 'Duiven van winnende lijnen uit internationale competities. Perfecte aanvulling voor serieuze fokkers.',
+                        itemCount: 18
+                    },
+                    {
+                        id: 3,
+                        title: 'Seizoensveiling Jonge Duiven',
+                        description: 'Jonge duiven van 2024, geringd en klaar voor training. Ideaal voor beginnende liefhebbers.',
+                        itemCount: 32
+                    },
+                    {
+                        id: 4,
+                        title: 'Erfgoed Collectie - Oude Lijnen',
+                        description: 'Zeldzame oude bloedlijnen behouden voor de toekomst. Historische waarde en kwaliteit.',
+                        itemCount: 12
+                    },
+                    {
+                        id: 5,
+                        title: 'Europa Cup Winnaars',
+                        description: 'Direct van kampioenen uit de Europa Cup. Bewezen prestaties op het hoogste niveau.',
+                        itemCount: 15
+                    },
+                    {
+                        id: 6,
+                        title: 'Stamboek Geregistreerde Duiven',
+                        description: 'Volledig gedocumenteerde afstamming met stamboek registratie. Garantie van kwaliteit.',
+                        itemCount: 20
+                    }
+                ],
+                
+                auctionItems: [
+                    {
+                        id: 1,
+                        lotNumber: '001',
+                        name: 'NL-2024-1234567',
+                        fullName: 'BG23-27619 - Volle zus van oa "Miss Moledo" - Asduif Moledo OLR Portugal',
+                        description: 'Volle zus van "Miss Moledo", deze won in Moledo OLR 2022 Portugal oa: 1e Nationaal tegen 15.991 duiven op een afstand van 1.233 km.',
+                        year: '2024',
+                        ring: 'NL-2024-1234567',
+                        sex: 'female',
+                        hasVideo: true,
+                        videoUrl: '#',
+                        isFavorite: false,
+                        currentBid: '300.00',
+                        bidCount: 7,
+                        endTime: new Date(Date.now() + 45 * 60 * 1000), // 45 minutes from now
+                        image: 'https://picsum.photos/300/300?random=101',
+                        pedigree: 'https://picsum.photos/800/600?random=201'
+                    },
+                    {
+                        id: 2,
+                        lotNumber: '002',
+                        name: 'NL-2024-1234568',
+                        fullName: 'BG23-27620 - Halfzus Barcelona winnaar - Kweekduif Barcelona lijn',
+                        description: 'Bewezen broedduif met uitstekende nakomelingen uit eerdere paringen. Directe Barcelona verbindingen met kampioenen.',
+                        year: '2023',
+                        ring: 'NL-2023-7654321',
+                        sex: 'female',
+                        hasVideo: false,
+                        videoUrl: null,
+                        isFavorite: true,
+                        currentBid: '150.00',
+                        bidCount: 3,
+                        endTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
+                        image: 'https://picsum.photos/300/300?random=102',
+                        pedigree: 'https://picsum.photos/800/600?random=202'
+                    },
+                    {
+                        id: 3,
+                        lotNumber: '003',
+                        name: 'NL-2024-1234569',
+                        fullName: 'BG23-27621 - Zoon van "Super Crack" - Raceduif Barcelona Perpignan lijn',
+                        description: 'Snelle duif met bewezen prestaties op middellange afstand wedstrijden. Zoon van "Super Crack" kampioen.',
+                        year: '2022',
+                        ring: 'NL-2022-9876543',
+                        sex: 'male',
+                        hasVideo: true,
+                        videoUrl: '#',
+                        isFavorite: false,
+                        currentBid: '85.00',
+                        bidCount: 12,
+                        endTime: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8 hours from now
+                        image: 'https://picsum.photos/300/300?random=103',
+                        pedigree: 'https://picsum.photos/800/600?random=203'
+                    },
+                    {
+                        id: 4,
+                        lotNumber: '004',
+                        name: 'NL-2024-1234570',
+                        fullName: 'BG23-27622 - Bewezen moeder Champions - Kweekduif topkruising',
+                        description: 'Kampioensduif met meerdere prijzen in nationale competities. Bewezen moeder van meerdere kampioenen.',
+                        year: '2024',
+                        ring: 'NL-2024-5555555',
+                        sex: 'female',
+                        hasVideo: false,
+                        videoUrl: null,
+                        isFavorite: false,
+                        currentBid: '220.00',
+                        bidCount: 5,
+                        endTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day from now
+                        image: 'https://picsum.photos/300/300?random=104',
+                        pedigree: 'https://picsum.photos/800/600?random=204'
+                    },
+                    {
+                        id: 5,
+                        lotNumber: '005',
+                        name: 'NL-2024-1234571',
+                        fullName: 'BG23-27623 - Kleinzoon "De Barcelona" - Jonge duif snelheidslijn',
+                        description: 'Veelbelovende jonge duif uit topkruising tussen kampioenenlijnen. Kleinzoon van "De Barcelona".',
+                        year: '2024',
+                        ring: 'NL-2024-6666666',
+                        sex: 'male',
+                        hasVideo: true,
+                        videoUrl: '#',
+                        isFavorite: true,
+                        currentBid: '45.00',
+                        bidCount: 2,
+                        endTime: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+                        image: 'https://picsum.photos/300/300?random=105',
+                        pedigree: 'https://picsum.photos/800/600?random=205'
+                    }
+                ],
+                
+                get selectedAuction() {
+                    return this.auctions.find(a => a.id === this.selectedAuctionId);
+                },
+                
+                selectAuction(auctionId) {
+                    this.selectedAuctionId = auctionId;
+                },
+                
+                viewItem(itemId) {
+                    window.location.href = 'auction-item-detail.html';
+                },
+                
+                formatItemTimeLeft(endTime) {
+                    const now = new Date();
+                    const timeLeft = endTime - now;
+                    
+                    if (timeLeft <= 0) return 'Afgelopen';
+                    
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    if (days > 0) {
+                        return `${days}d ${hours}u`;
+                    } else if (hours > 0) {
+                        return `${hours}u ${minutes}m`;
+                    } else {
+                        return `${minutes}m`;
+                    }
+                },
+                
+                formatItemTimeLeftWithSeconds(endTime) {
+                    // Reference currentTime to ensure reactivity
+                    this.currentTime;
+                    const now = new Date();
+                    const timeLeft = endTime - now;
+                    
+                    if (timeLeft <= 0) return 'Afgelopen';
+                    
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    
+                    if (days > 0) {
+                        return `${days}d ${hours}u`;
+                    } else if (hours > 0) {
+                        return `${hours}u ${minutes}m`;
+                    } else {
+                        return `${minutes}m ${seconds}s`;
+                    }
+                },
+                
+                init() {
+                    // Event listeners for image/video interactions
+                    this.$el.addEventListener('zoom-image', (event) => {
+                        this.showImageModal(event.detail.src, event.detail.alt);
+                    });
+                    
+                    this.$el.addEventListener('zoom-pedigree', (event) => {
+                        this.showImageModal(event.detail.src, event.detail.alt);
+                    });
+                    
+                    this.$el.addEventListener('play-video', (event) => {
+                        this.playVideo(event.detail.url);
+                    });
+                    
+                    this.$el.addEventListener('show-bid-history', (event) => {
+                        this.showBidHistory(event.detail.itemId);
+                    });
+                    
+                    // Update countdowns every second for live seconds display
+                    setInterval(() => {
+                        this.currentTime = Date.now();
+                    }, 1000);
+                },
+                
+                showImageModal(src, alt) {
+                    // Create modal overlay
+                    const modal = document.createElement('div');
+                    modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
+                    modal.innerHTML = `
+                        <div class="relative max-w-4xl max-h-full">
+                            <img src="${src}" alt="${alt}" class="max-w-full max-h-full object-contain rounded-lg">
+                            <button class="absolute top-4 right-4 text-white hover:text-gray-300 bg-black bg-opacity-50 rounded-full p-2">
+                                <i data-lucide="x" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Close on click
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal || e.target.closest('button')) {
+                            document.body.removeChild(modal);
+                        }
+                    });
+                    
+                    document.body.appendChild(modal);
+                    lucide.createIcons();
+                },
+                
+                playVideo(url) {
+                    // For now, just show an alert - in real implementation would open video player
+                    alert('Video afspelen: ' + url);
+                },
+                
+                showBidHistory(itemId) {
+                    // Create mock bid history modal
+                    const item = this.auctionItems.find(i => i.id === itemId);
+                    const bids = this.generateMockBids(item);
+                    
+                    const modal = document.createElement('div');
+                    modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
+                    modal.innerHTML = `
+                        <div class="bg-white rounded-lg max-w-md w-full max-h-96 overflow-y-auto">
+                            <div class="p-4 border-b border-gray-200">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-lg font-semibold">Biedgeschiedenis - Lot ${item.lotNumber}</h3>
+                                    <button class="text-gray-400 hover:text-gray-600">
+                                        <i data-lucide="x" class="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="space-y-2">
+                                    ${bids.map(bid => `
+                                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                            <div>
+                                                <div class="font-medium">€${bid.amount}</div>
+                                                <div class="text-xs text-gray-500">${bid.time}</div>
+                                            </div>
+                                            <div class="text-sm text-gray-600">${bid.bidder}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Close on click
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal || e.target.closest('button')) {
+                            document.body.removeChild(modal);
+                        }
+                    });
+                    
+                    document.body.appendChild(modal);
+                    lucide.createIcons();
+                },
+                
+                generateMockBids(item) {
+                    const bids = [];
+                    let currentBid = parseFloat(item.currentBid);
+                    
+                    for (let i = 0; i < item.bidCount; i++) {
+                        const timeAgo = Math.floor(Math.random() * 120) + 1; // 1-120 minutes ago
+                        bids.push({
+                            amount: currentBid.toFixed(2),
+                            time: `${timeAgo} min geleden`,
+                            bidder: `Bieder ${String.fromCharCode(65 + (i % 26))}`
+                        });
+                        currentBid -= Math.random() * 20 + 5; // Previous bids were 5-25 euros lower
+                    }
+                    
+                    return bids.reverse(); // Show oldest first
+                }
+            }
+        }
+
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
