@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details - PITTS - Pigeons Into The Sky</title>
+    
+    <!-- Favicon and Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/icons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/icons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/icons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/icons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/icons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/icons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/icons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/icons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/icons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="assets/icons/manifest.json">
+    <link rel="shortcut icon" href="assets/icons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#273661">
+    <meta name="msapplication-TileImage" content="assets/icons/ms-icon-144x144.png">
+    <meta name="msapplication-config" content="assets/icons/browserconfig.xml">
+    <meta name="theme-color" content="#4E8ABD">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': {
+                            'light': '#4E8ABD',
+                            'dark': '#273661',
+                        }
+                    },
+                    maxWidth: {
+                        'container': '1400px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(78, 138, 189, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(78, 138, 189, 0.6); }
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 transition-colors duration-300" x-data="{ mobileMenuOpen: false }">
+    <!-- Top Bar with Language and Notifications -->
+    <div class="bg-primary-blue-dark text-white py-2">
+        <div class="max-w-container mx-auto px-4 flex justify-between items-center text-sm">
+            <div class="flex items-center space-x-4" x-data="timezoneComponent()" x-cloak>
+                <div class="flex items-center">
+                    <i data-lucide="clock" class="w-4 h-4 inline mr-1 pointer-events-none"></i>
+                    <span x-text="currentTime" class="font-mono mr-2"></span>
+                    <div class="relative">
+                        <button @click="dropdownOpen = !dropdownOpen" 
+                                class="text-white hover:text-gray-200 transition-colors flex items-center bg-white bg-opacity-10 px-2 py-1 rounded text-xs">
+                            <span x-text="getSelectedTimezoneInfo().offset" class="font-mono mr-1"></span>
+                            <span x-text="getSelectedTimezoneInfo().label.split(' ')[0]" class="mr-1"></span>
+                            <i data-lucide="chevron-down" class="w-3 h-3 pointer-events-none" :class="{ 'rotate-180': dropdownOpen }"></i>
+                        </button>
+                        <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition
+                             class="absolute top-full left-0 mt-1 bg-white text-gray-900 rounded shadow-lg py-1 text-xs min-w-[280px] z-50 max-h-80 overflow-y-auto">
+                            <div class="px-3 py-2 bg-gray-50 font-semibold text-gray-700 border-b">Selecteer Tijdzone</div>
+                            <div>
+                                <template x-for="timezone in timezones" :key="timezone.value">
+                                    <button @click="changeTimezone(timezone.value)" 
+                                            class="flex justify-between items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
+                                            :class="{ 'bg-primary-blue-light text-white hover:bg-primary-blue-dark': timezone.value === selectedTimezone }">
+                                        <span x-text="timezone.label"></span>
+                                        <span x-text="timezone.offset" class="font-mono text-gray-500" :class="{ 'text-gray-200': timezone.value === selectedTimezone }"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2" x-data="{ selectedLang: 'nl', open: false }">
+                    <div class="relative">
+                        <button @click="open = !open" class="bg-transparent text-white text-xs border-none focus:outline-none flex items-center">
+                            <i data-lucide="globe" class="w-3 h-3 mr-1 pointer-events-none"></i>
+                            <span class="mr-1">International</span>
+                            <span x-text="selectedLang.toUpperCase()"></span>
+                            <i data-lucide="chevron-down" class="w-3 h-3 ml-1 pointer-events-none" :class="{ 'rotate-180': open }"></i>
+                        </button>
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute top-full right-0 mt-1 bg-white text-gray-900 rounded shadow-lg py-1 text-xs min-w-[120px] z-50">
+                            <button @click="selectedLang = 'nl'; open = false" class="flex items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors">
+                                <span class="w-6 text-center mr-2">🇳🇱</span>Nederlands
+                            </button>
+                            <button @click="selectedLang = 'fr'; open = false" class="flex items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors">
+                                <span class="w-6 text-center mr-2">🇫🇷</span>Français
+                            </button>
+                            <button @click="selectedLang = 'en'; open = false" class="flex items-center w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors">
+                                <span class="w-6 text-center mr-2">🇬🇧</span>English
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-300">
+        <div class="max-w-container mx-auto px-4">
+            <div class="flex items-center py-6 gap-8">
+                <div class="flex-shrink-0">
+                    <img src="assets/images/logo/pitts-logo-landscape.svg" 
+                         alt="PITTS - Pigeons Into The Sky" 
+                         class="h-24 w-auto"
+                         onerror="this.src='assets/images/logo/pitts-logo-landscape.png'">
+                </div>
+                <div class="hidden lg:block w-px h-20 bg-gray-200 dark:bg-gray-600"></div>
+                <div class="flex-1 flex flex-col justify-between min-h-[4rem]" x-data="{ searchQuery: '', notificationCount: 3 }">
+                    <div class="flex items-center justify-end space-x-4 mb-3">
+                        <div class="hidden md:block relative">
+                            <input type="search" placeholder="Zoeken..." x-model="searchQuery" 
+                                   class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-blue-light w-64">
+                            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                        </div>
+                        <div class="relative" x-data="{ showNotifications: false }">
+                            <button @click="showNotifications = !showNotifications" 
+                                    class="text-gray-600 hover:text-primary-blue-light transition-colors relative">
+                                <i data-lucide="bell" class="w-5 h-5 pointer-events-none"></i>
+                                <span x-show="notificationCount > 0" x-text="notificationCount" 
+                                      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"></span>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-primary-blue-light rounded-full flex items-center justify-center">
+                                <i data-lucide="user" class="w-4 h-4 text-white pointer-events-none"></i>
+                            </div>
+                            <div class="hidden lg:block">
+                                <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Inloggen</button>
+                                <span class="text-gray-400 mx-1">|</span>
+                                <button class="text-sm text-primary-blue-dark hover:text-primary-blue-light transition-colors">Account aanmaken</button>
+                            </div>
+                        </div>
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                                class="lg:hidden text-gray-600 hover:text-primary-blue-light transition-colors">
+                            <i data-lucide="menu" class="w-5 h-5 pointer-events-none" x-show="!mobileMenuOpen"></i>
+                            <i data-lucide="x" class="w-5 h-5 pointer-events-none" x-show="mobileMenuOpen"></i>
+                        </button>
+                    </div>
+                    <nav class="hidden lg:block" x-data="{ articlesOpen: false, moreOpen: false }">
+                        <ul class="flex items-center justify-end space-x-8">
+                            <li><a href="index.html" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Home</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Nieuws</a></li>
+                            <li class="relative">
+                                <button @click="articlesOpen = !articlesOpen" @click.away="articlesOpen = false"
+                                        class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium flex items-center">
+                                    Artikels <i data-lucide="chevron-down" class="w-3 h-3 ml-1 pointer-events-none" :class="{ 'rotate-180': articlesOpen }"></i>
+                                </button>
+                            </li>
+                            <li><a href="auctions.html" class="text-primary-blue-dark hover:text-primary-blue-light transition-colors font-medium border-b-2 border-primary-blue-light pb-1">Veilingen</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Bonverkopen</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Vraag & Aanbod</a></li>
+                            <li><a href="#" class="text-gray-700 hover:text-primary-blue-light transition-colors font-medium">Webshop</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumbs -->
+    <nav class="bg-gray-50 border-b">
+        <div class="max-w-container mx-auto px-4 py-3">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li><a href="index.html" class="text-gray-500 hover:text-primary-blue-light transition-colors">Home</a></li>
+                <li><i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 pointer-events-none"></i></li>
+                <li><a href="auctions.html" class="text-gray-500 hover:text-primary-blue-light transition-colors">Veilingen</a></li>
+                <li><i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 pointer-events-none"></i></li>
+                <li><a href="auction-detail.html" class="text-gray-500 hover:text-primary-blue-light transition-colors">Veiling Details</a></li>
+                <li><i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 pointer-events-none"></i></li>
+                <li class="text-gray-900 font-medium">Item Details</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-container mx-auto px-4 py-16">
+        <div class="text-center max-w-4xl mx-auto">
+            <!-- Construction Icon -->
+            <div class="mb-8">
+                <div class="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-primary-blue-light to-primary-blue-dark rounded-full pulse-glow">
+                    <i data-lucide="image" class="w-16 h-16 text-white floating pointer-events-none"></i>
+                </div>
+            </div>
+            
+            <!-- Title -->
+            <div class="mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Item Details</h1>
+                <h2 class="text-2xl md:text-3xl font-semibold text-primary-blue-dark mb-6">In Ontwikkeling</h2>
+                <p class="text-lg text-gray-600 leading-relaxed mb-8 max-w-2xl mx-auto">
+                    We werken hard aan de ontwikkeling van onze uitgebreide item detail pagina. 
+                    Binnenkort kunt u hier alle informatie vinden over specifieke duiven inclusief foto's, 
+                    afstamming, prestaties en meer.
+                </p>
+            </div>
+            
+            <!-- Back to Auction -->
+            <div class="mt-12">
+                <a href="auction-detail.html" 
+                   class="inline-flex items-center px-6 py-3 bg-primary-blue-light text-white rounded-lg hover:bg-primary-blue-dark transition-colors font-medium">
+                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2 pointer-events-none"></i>
+                    Terug naar Veiling
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-primary-blue-dark text-white mt-16 relative overflow-hidden">
+        <div class="max-w-container mx-auto px-4 py-16 relative">
+            <div class="grid lg:grid-cols-5 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="mb-4">
+                        <img src="assets/images/logo/pitts-logo-landscape-white.svg" 
+                             alt="PITTS - Pigeons Into The Sky" 
+                             class="h-24 w-auto"
+                             onerror="this.src='assets/images/logo/pitts-logo-landscape-white.png'">
+                    </div>
+                    <p class="text-gray-300">Het toonaangevende platform voor de duivensport gemeenschap.</p>
+                </div>
+                <div class="border-l border-white border-opacity-10 pl-6">
+                    <h4 class="font-bold mb-4 text-white">Hoofdpagina's</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="index.html" class="text-gray-300 hover:text-primary-blue-light">Home</a></li>
+                        <li><a href="auctions.html" class="text-gray-300 hover:text-primary-blue-light">Veilingen</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white border-opacity-20 mt-16 pt-8">
+                <div class="text-center">
+                    <div class="text-sm text-gray-300">&copy; 2025 PITTS - Pigeons Into The Sky</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Alpine.js timezone component
+        function timezoneComponent() {
+            return {
+                currentTime: '',
+                selectedTimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                dropdownOpen: false,
+                timezones: [
+                    { value: 'Europe/Amsterdam', label: 'Amsterdam (Nederland)', offset: '+01:00' },
+                    { value: 'Europe/Brussels', label: 'Brussels (België)', offset: '+01:00' },
+                    { value: 'Europe/Paris', label: 'Paris (Frankrijk)', offset: '+01:00' },
+                    { value: 'Europe/Berlin', label: 'Berlin (Duitsland)', offset: '+01:00' },
+                    { value: 'Europe/London', label: 'London (Verenigd Koninkrijk)', offset: '+00:00' },
+                    { value: 'Europe/Rome', label: 'Rome (Italië)', offset: '+01:00' },
+                    { value: 'America/New_York', label: 'New York (Verenigde Staten)', offset: '-05:00' },
+                    { value: 'America/Chicago', label: 'Chicago (Verenigde Staten)', offset: '-06:00' },
+                    { value: 'America/Los_Angeles', label: 'Los Angeles (Verenigde Staten)', offset: '-08:00' },
+                    { value: 'Asia/Tokyo', label: 'Tokyo (Japan)', offset: '+09:00' },
+                    { value: 'Asia/Shanghai', label: 'Shanghai (China)', offset: '+08:00' },
+                    { value: 'Australia/Sydney', label: 'Sydney (Australië)', offset: '+11:00' }
+                ],
+                init() {
+                    this.updateTime();
+                    setInterval(() => { this.updateTime(); }, 1000);
+                },
+                updateTime() {
+                    const now = new Date();
+                    this.currentTime = now.toLocaleTimeString('nl-NL', {
+                        timeZone: this.selectedTimezone, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit'
+                    });
+                },
+                changeTimezone(timezone) {
+                    this.selectedTimezone = timezone; this.dropdownOpen = false; this.updateTime();
+                },
+                getSelectedTimezoneInfo() {
+                    return this.timezones.find(tz => tz.value === this.selectedTimezone) || this.timezones[0];
+                }
+            }
+        }
+
+        // Initialize Lucide icons
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
