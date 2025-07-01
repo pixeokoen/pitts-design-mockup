@@ -265,12 +265,31 @@
             <div class="flex-1">
                 <!-- Header -->
                 <div class="mb-6">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2" x-text="selectedAuction?.title || 'Selecteer een veiling'"></h1>
-                    <p class="text-gray-600" x-text="selectedAuction ? selectedAuction.description : 'Kies een veiling uit de lijst om de items te bekijken'"></p>
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-900 mb-2" x-text="selectedAuction?.title || 'Selecteer een veiling'"></h1>
+                            <p class="text-gray-600" x-text="selectedAuction ? selectedAuction.description : 'Kies een veiling uit de lijst om de items te bekijken'"></p>
+                        </div>
+                        <!-- View Toggle -->
+                        <div x-show="selectedAuction" class="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
+                            <button @click="viewMode = 'list'" 
+                                    :class="viewMode === 'list' ? 'bg-white shadow-sm text-primary-blue-dark' : 'text-gray-600 hover:text-gray-900'"
+                                    class="flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                <i data-lucide="list" class="w-4 h-4 mr-1 pointer-events-none"></i>
+                                Lijst
+                            </button>
+                            <button @click="viewMode = 'grid'" 
+                                    :class="viewMode === 'grid' ? 'bg-white shadow-sm text-primary-blue-dark' : 'text-gray-600 hover:text-gray-900'"
+                                    class="flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                <i data-lucide="grid-3x3" class="w-4 h-4 mr-1 pointer-events-none"></i>
+                                Kaarten
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Items Grid -->
-                <div x-show="selectedAuction" class="space-y-3">
+                <!-- Items List View -->
+                <div x-show="selectedAuction && viewMode === 'list'" class="space-y-3">
                     <template x-for="item in auctionItems" :key="item.id">
                         <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200">
                             <div class="p-4">
@@ -348,6 +367,8 @@
                                             <!-- Top: Price & Bid History -->
                                             <div class="h-24 flex flex-col justify-center items-center p-3 border-b border-gray-200">
                                                 <div class="text-3xl font-bold mb-1 text-purple-700" x-text="'€' + Math.floor(item.currentBid)"></div>
+                                                <div class="text-xs text-purple-600 mb-1 font-bold" x-text="item.currentBidder">
+                                                </div>
                                                 <button @click="$dispatch('show-bid-history', { itemId: item.id })"
                                                         class="text-xs text-purple-600 hover:text-purple-700 transition-colors underline">
                                                     <span x-text="'Biedgeschiedenis (' + item.bidCount + ')'"></span>
@@ -362,6 +383,103 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Items Grid View -->
+                <div x-show="selectedAuction && viewMode === 'grid'" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <template x-for="item in auctionItems" :key="item.id">
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200 flex flex-col">
+                            <!-- Top: Two Squares Side by Side -->
+                            <div class="flex">
+                                <!-- Left Square: Photo -->
+                                <div class="relative w-1/2">
+                                    <div class="aspect-square bg-gray-200 rounded-tl-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                                         @click="$dispatch('zoom-image', { src: 'assets/images/pigeons/default-pigeon.jpg', alt: item.name })">
+                                        <img src="assets/images/pigeons/default-pigeon.jpg" 
+                                             alt="Pigeon thumbnail"
+                                             class="w-full h-full object-cover"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                        <div class="w-full h-full flex items-center justify-center" style="display: none;">
+                                            <i data-lucide="image" class="w-12 h-12 text-gray-400 pointer-events-none"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Square: Price & End Time -->
+                                <div class="w-1/2 aspect-square bg-gradient-to-b from-gray-50 to-gray-100 rounded-tr-lg border-l border-gray-200 flex flex-col justify-center items-center p-4"
+                                     style="box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);">
+                                    <!-- Price & Bidder -->
+                                    <div class="text-center mb-3">
+                                        <div class="text-2xl font-bold mb-1 text-purple-700" x-text="'€' + Math.floor(item.currentBid)"></div>
+                                        <div class="text-xs text-purple-600 font-bold mb-1" x-text="item.currentBidder"></div>
+                                        <!-- Bid History -->
+                                        <button @click="$dispatch('show-bid-history', { itemId: item.id })"
+                                                class="text-xs text-purple-600 hover:text-purple-700 transition-colors underline">
+                                            <span x-text="'Biedgeschiedenis (' + item.bidCount + ')'"></span>
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Countdown -->
+                                    <div class="text-center border-t border-gray-200 pt-3 w-full">
+                                        <div class="text-sm font-bold text-purple-500 mb-1" x-text="formatItemTimeLeftWithSeconds(item.endTime)"></div>
+                                        <div class="text-xs text-purple-400" 
+                                             x-text="new Date(item.endTime).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bottom: Card Content -->
+                            <div class="p-4">
+                                <!-- Header -->
+                                <div class="mb-3">
+                                    <span class="text-gray-400 text-xs font-medium" x-text="'Lot ' + item.lotNumber"></span>
+                                    <h3 class="text-lg font-semibold mb-2 leading-tight">
+                                        <a href="auction-item-detail.html" class="text-primary-blue-light hover:text-primary-blue-dark underline transition-colors" x-text="item.fullName"></a>
+                                    </h3>
+                                    <p class="text-gray-600 text-sm line-clamp-2 mb-3" x-text="item.description"></p>
+                                </div>
+                                
+                                <!-- Action Row -->
+                                <div class="flex items-center justify-between">
+                                    <!-- Left: Gender and Buttons -->
+                                    <div class="flex items-center gap-2">
+                                        <!-- Gender Button -->
+                                        <div class="inline-flex items-center px-2 py-1 rounded text-sm font-medium border"
+                                             :class="item.sex === 'male' ? 'bg-blue-50 border-blue-200' : 'bg-pink-50 border-pink-200'">
+                                            <img :src="item.sex === 'male' ? 'assets/icons/ui/male.svg' : 'assets/icons/ui/female.svg'" 
+                                                 :alt="item.sex === 'male' ? 'Male' : 'Female'"
+                                                 class="w-4 h-4"
+                                                 :style="{ filter: item.sex === 'male' ? 'brightness(0) saturate(100%) invert(49%) sepia(78%) saturate(2476%) hue-rotate(204deg) brightness(95%) contrast(86%)' : 'brightness(0) saturate(100%) invert(54%) sepia(98%) saturate(1945%) hue-rotate(298deg) brightness(104%) contrast(94%)' }" />
+                                        </div>
+                                        
+                                        <!-- Pedigree Button -->
+                                        <button @click="$dispatch('zoom-pedigree', { src: item.pedigree, alt: 'Pedigree ' + item.name })"
+                                                class="inline-flex items-center bg-primary-blue-light text-white rounded px-2 py-1 text-xs font-medium transition-colors hover:bg-primary-blue-dark">
+                                            <img src="assets/icons/ui/pedigree.svg" alt="Pedigree" class="w-3 h-3 mr-1" 
+                                                 style="filter: brightness(0) invert(1);" />
+                                            Pedigree
+                                        </button>
+                                        
+                                        <!-- Video Button -->
+                                        <button x-show="item.hasVideo" 
+                                                @click="$dispatch('play-video', { url: item.videoUrl })"
+                                                class="inline-flex items-center bg-red-700 text-white rounded px-2 py-1 text-xs font-medium transition-colors hover:bg-red-800">
+                                            <i data-lucide="play" class="w-3 h-3 mr-1 pointer-events-none"></i>
+                                            Video
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- Right: Favorite Star -->
+                                    <button @click="item.isFavorite = !item.isFavorite" 
+                                            class="p-1 rounded hover:bg-gray-100 transition-colors">
+                                        <i data-lucide="star" 
+                                           :class="item.isFavorite ? 'text-yellow-500 fill-current' : 'text-gray-400'"
+                                           class="w-5 h-5 pointer-events-none"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -595,6 +713,7 @@
             return {
                 selectedAuctionId: 1,
                 currentTime: Date.now(),
+                viewMode: 'list', // Default to list view
                 auctions: [
                     {
                         id: 1,
@@ -648,6 +767,7 @@
                         videoUrl: '#',
                         isFavorite: false,
                         currentBid: '300.00',
+                        currentBidder: 'J. van der Berg',
                         bidCount: 7,
                         endTime: new Date(Date.now() + 45 * 60 * 1000), // 45 minutes from now
                         image: 'https://picsum.photos/300/300?random=101',
@@ -666,6 +786,7 @@
                         videoUrl: null,
                         isFavorite: true,
                         currentBid: '150.00',
+                        currentBidder: 'M. Janssen',
                         bidCount: 3,
                         endTime: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
                         image: 'https://picsum.photos/300/300?random=102',
@@ -684,6 +805,7 @@
                         videoUrl: '#',
                         isFavorite: false,
                         currentBid: '85.00',
+                        currentBidder: 'P. de Groot',
                         bidCount: 12,
                         endTime: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8 hours from now
                         image: 'https://picsum.photos/300/300?random=103',
@@ -702,6 +824,7 @@
                         videoUrl: null,
                         isFavorite: false,
                         currentBid: '220.00',
+                        currentBidder: 'A. Hendricks',
                         bidCount: 5,
                         endTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day from now
                         image: 'https://picsum.photos/300/300?random=104',
@@ -720,6 +843,7 @@
                         videoUrl: '#',
                         isFavorite: true,
                         currentBid: '45.00',
+                        currentBidder: 'R. Smit',
                         bidCount: 2,
                         endTime: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
                         image: 'https://picsum.photos/300/300?random=105',

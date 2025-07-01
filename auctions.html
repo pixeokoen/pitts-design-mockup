@@ -608,9 +608,9 @@
         </div>
 
         <!-- Auctions Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" x-data="auctionsPage()">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" x-data="auctionsPage()">
             <template x-for="auction in auctions" :key="auction.id">
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden auction-card-hover cursor-pointer" @click="viewAuction(auction.id)">
+                <article class="bg-white rounded-lg shadow-lg overflow-hidden auction-card-hover cursor-pointer flex flex-col" @click="viewAuction(auction.id)">
                     <div class="relative">
                         <img :src="auction.image" :alt="auction.title" class="w-full h-48 object-cover">
                         <div class="absolute top-3 left-3">
@@ -630,15 +630,15 @@
                             </span>
                         </div>
                     </div>
-                    <div class="p-6">
+                    <div class="p-6 flex flex-col h-full">
                         <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2" x-text="auction.title"></h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-2" x-text="auction.description"></p>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow" x-text="auction.description"></p>
                         
-                        <!-- Two info cards -->
-                        <div class="flex gap-3 mt-4">
+                        <!-- Two info cards - aligned at bottom -->
+                        <div class="flex gap-3 mt-auto">
                             <!-- Item count card -->
                             <div class="flex-1 bg-gray-50 rounded-lg p-3 text-center">
-                                <div class="text-xs text-gray-500 mb-1">Items</div>
+                                <div class="text-xs text-gray-500 mb-1">Loten</div>
                                 <div class="text-lg font-bold text-primary-blue-dark" x-text="auction.itemCount"></div>
                             </div>
                             
@@ -987,11 +987,18 @@
                         image: 'https://picsum.photos/400/250?random=6',
                         status: 'ended',
                         featured: false,
-                        endTime: Date.now() + (45 * 60 * 1000), // 45 minutes from now
+                        endTime: Date.now() + (25 * 60 * 1000), // 25 minutes from now
                         itemCount: 20,
                         location: 'Utrecht, NL'
                     }
                 ],
+                
+                init() {
+                    // Update countdowns every second
+                    setInterval(() => {
+                        this.$nextTick();
+                    }, 1000);
+                },
                 
                 viewAuction(auctionId) {
                     window.location.href = 'auction-detail.html';
@@ -1008,13 +1015,15 @@
                     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
                     
                     if (days > 0) {
                         return `${days}d ${hours}u`;
                     } else if (hours > 0) {
                         return `${hours}u ${minutes}m`;
                     } else {
-                        return `${minutes}m`;
+                        // When we have minutes left, show minutes and seconds counting down
+                        return `${minutes}m ${seconds}s`;
                     }
                 }
             }
