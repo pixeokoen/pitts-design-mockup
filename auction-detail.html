@@ -350,12 +350,19 @@
                                                         Pedigree
                                                     </button>
                                                     
-                                                    <!-- Video Button -->
+                                                                                                        <!-- Video Button -->
                                                     <button x-show="item.hasVideo" 
                                                             @click="$dispatch('play-video', { url: item.videoUrl })"
                                                             class="inline-flex items-center bg-red-700 text-white rounded px-3 py-1 text-sm font-medium transition-colors hover:bg-red-800">
                                                         <i data-lucide="play" class="w-4 h-4 mr-2 pointer-events-none"></i>
-                                                                                                                Video
+                                                        Video
+                                                    </button>
+                                                    
+                                                    <!-- Quick Bid Button -->
+                                                    <button @click="openBidModal(item)"
+                                                            class="inline-flex items-center bg-purple-700 text-white rounded px-3 py-1 text-sm font-medium transition-colors hover:bg-purple-800">
+                                                        <i data-lucide="zap" class="w-4 h-4 mr-2 pointer-events-none"></i>
+                                                        Snel Bieden
                                                     </button>
                                                 </div>
                                             </div>
@@ -473,6 +480,13 @@
                                             <i data-lucide="play" class="w-3 h-3 mr-1 pointer-events-none"></i>
                                             Video
                                         </button>
+                                        
+                                        <!-- Quick Bid Button -->
+                                        <button @click="openBidModal(item)"
+                                                class="inline-flex items-center bg-purple-700 text-white rounded px-2 py-1 text-xs font-medium transition-colors hover:bg-purple-800">
+                                            <i data-lucide="zap" class="w-3 h-3 mr-1 pointer-events-none"></i>
+                                            Snel Bieden
+                                        </button>
 
                                     </div>
                                     
@@ -542,6 +556,148 @@
                         </div>
                     </div>
                 </template>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Bid Modal -->
+    <div x-show="bidModalOpen" 
+         x-transition:enter="transition-opacity ease-out duration-300" 
+         x-transition:enter-start="opacity-0" 
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity ease-in duration-200" 
+         x-transition:leave-start="opacity-100" 
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        
+        <div x-show="bidModalOpen"
+             x-transition:enter="transform transition ease-out duration-300" 
+             x-transition:enter-start="scale-95 opacity-0" 
+             x-transition:enter-end="scale-100 opacity-100"
+             x-transition:leave="transform transition ease-in duration-200" 
+             x-transition:leave-start="scale-100 opacity-100" 
+             x-transition:leave-end="scale-95 opacity-0"
+             class="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+             @click.stop>
+            
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between rounded-t-lg">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 flex items-center">
+                        <i data-lucide="zap" class="w-5 h-5 mr-2 text-purple-600 pointer-events-none"></i>
+                        Snel Bieden
+                    </h2>
+                    <div class="text-sm text-gray-600" x-text="selectedBidItem?.fullName"></div>
+                </div>
+                <button @click="closeBidModal()" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-gray-500 pointer-events-none"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div x-show="selectedBidItem" class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Left: Bidding Interface -->
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Plaats uw bod</h3>
+                            
+                            <!-- Current Bid Display -->
+                            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                                <div class="text-sm text-gray-600 mb-1">Huidig hoogste bod</div>
+                                <div class="text-2xl font-bold text-purple-700 mb-1" x-text="selectedBidItem ? '€' + Math.floor(selectedBidItem.currentBid) : ''"></div>
+                                <div class="text-sm text-gray-600" x-text="selectedBidItem ? 'Door: ' + selectedBidItem.currentBidder : ''"></div>
+                            </div>
+                            
+                            <!-- Bid Input -->
+                            <div class="mb-6">
+                                <label for="bidAmount" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Uw bod (€)
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <span class="text-gray-500 text-lg">€</span>
+                                    </div>
+                                    <input type="number" 
+                                           id="bidAmount"
+                                           x-model="bidAmount"
+                                           :min="selectedBidItem ? Math.floor(parseFloat(selectedBidItem.currentBid)) + 1 : 0"
+                                           step="1"
+                                           class="block w-full pl-8 pr-4 py-3 text-lg font-semibold border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                                           placeholder="0">
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1" x-text="selectedBidItem ? 'Minimaal: €' + (Math.floor(parseFloat(selectedBidItem.currentBid)) + 1) : ''"></div>
+                            </div>
+                            
+                            <!-- Quick Bid Buttons -->
+                            <div class="mb-6">
+                                <div class="text-sm font-medium text-gray-700 mb-2">Snelle biedingen</div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button @click="bidAmount = (Math.floor(parseFloat(selectedBidItem.currentBid)) + 5).toString()"
+                                            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors text-sm font-medium">
+                                        +€5
+                                    </button>
+                                    <button @click="bidAmount = (Math.floor(parseFloat(selectedBidItem.currentBid)) + 10).toString()"
+                                            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors text-sm font-medium">
+                                        +€10
+                                    </button>
+                                    <button @click="bidAmount = (Math.floor(parseFloat(selectedBidItem.currentBid)) + 25).toString()"
+                                            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors text-sm font-medium">
+                                        +€25
+                                    </button>
+                                    <button @click="bidAmount = (Math.floor(parseFloat(selectedBidItem.currentBid)) + 50).toString()"
+                                            class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors text-sm font-medium">
+                                        +€50
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Time Remaining -->
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                                <div class="flex items-center">
+                                    <i data-lucide="clock" class="w-4 h-4 text-yellow-600 mr-2 pointer-events-none"></i>
+                                    <div>
+                                        <div class="text-sm font-medium text-yellow-800">Resterende tijd</div>
+                                        <div class="text-lg font-bold text-yellow-700" x-text="selectedBidItem ? formatItemTimeLeftWithSeconds(selectedBidItem.endTime) : ''"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bid Button -->
+                            <button @click="placeBid()" 
+                                    class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-4 px-6 rounded-lg transition-colors text-lg flex items-center justify-center">
+                                <i data-lucide="gavel" class="w-5 h-5 mr-2 pointer-events-none"></i>
+                                Plaats Bod
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Bid History -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <i data-lucide="history" class="w-5 h-5 mr-2 text-gray-500 pointer-events-none"></i>
+                            Biedgeschiedenis
+                        </h3>
+                        
+                        <div class="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
+                            <div class="space-y-3">
+                                <template x-for="(bid, index) in (selectedBidItem ? generateBidHistory(selectedBidItem) : [])" :key="index">
+                                    <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg">
+                                        <div>
+                                            <div class="font-medium text-gray-900" x-text="bid.bidder"></div>
+                                            <div class="text-xs text-gray-500" x-text="bid.time"></div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="font-bold text-purple-700" x-text="'€' + bid.amount"></div>
+                                            <div class="text-xs" :class="index === 0 ? 'text-green-600 font-medium' : 'text-gray-500'" 
+                                                 x-text="index === 0 ? 'Hoogste' : 'Vorig'"></div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -779,6 +935,9 @@
                 viewMode: 'list', // Default to list view
                 itemPanelOpen: false,
                 selectedPanelItem: null,
+                bidModalOpen: false,
+                selectedBidItem: null,
+                bidAmount: '',
                 auctions: [
                     {
                         id: 1,
@@ -1091,6 +1250,33 @@
                 closeItemPanel() {
                     this.itemPanelOpen = false;
                     this.selectedPanelItem = null;
+                },
+                
+                openBidModal(item) {
+                    this.selectedBidItem = item;
+                    this.bidAmount = (Math.floor(parseFloat(item.currentBid)) + 5).toString(); // Default to current bid + 5
+                    this.bidModalOpen = true;
+                },
+                
+                closeBidModal() {
+                    this.bidModalOpen = false;
+                    this.selectedBidItem = null;
+                    this.bidAmount = '';
+                },
+                
+                placeBid() {
+                    if (!this.bidAmount || parseFloat(this.bidAmount) <= parseFloat(this.selectedBidItem.currentBid)) {
+                        alert('Uw bod moet hoger zijn dan het huidige bod.');
+                        return;
+                    }
+                    
+                    // Simulate placing bid
+                    this.selectedBidItem.currentBid = this.bidAmount;
+                    this.selectedBidItem.currentBidder = 'U'; // You
+                    this.selectedBidItem.bidCount++;
+                    
+                    alert('Uw bod van €' + this.bidAmount + ' is geplaatst!');
+                    this.closeBidModal();
                 },
                 
                 generateBidHistory(item) {
